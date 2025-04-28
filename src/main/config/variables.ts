@@ -3,6 +3,7 @@ import env from 'env-var'
 export const variables = {
   corsOriginPermission: env.get('CORS_ORIGIN_PERMISSION').required().asString(),
   timezone: env.get('TZ').required().asString(),
+  queueSQS: env.get('EXAMPLE_QUEUE_URL').required().asString(),
   dbMySql: {
     host: env.get('DB_MYSQL_HOST').required().asString(),
     user: env.get('DB_MYSQL_USER').required().asString(),
