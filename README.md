@@ -26,7 +26,7 @@
 Skeleton Microservices Framework foi desenvolvido para proporcionar uma estrutura base para a implementação de microservices. Utilizando conceitos do Domain-Driven Design, Clean Architecture, padrões SOLID e práticas como código limpo, o projeto visa facilitar e acelerar o desenvolvimento de aplicações escaláveis e de fácil manutenção.
 </p>
 > [!NOTE]
-> Please visit our [Official Site](https://nasa.github.io/openmct/) and [Getting Started Guide](https://nasa.github.io/openmct/getting-started/)
+> Please visit our [Repository Site](https://github.com/iamelisandromello/skeleton) and [Getting Started Guide](https://github.com/iamelisandromello/skeleton/blob/main/README.md)
 
 Depois de criar algo incrível com o Skeleton, mostre seu trabalho na nossa seção "Show and Tell" do GitHub Discussions. Adoramos ver implementações únicas e maravilhosas do microframework Skeleton!
 
