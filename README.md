@@ -22,8 +22,9 @@
 [![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![codecov](https://codecov.io/gh/nasa/openmct/branch/master/graph/badge.svg?token=7DQIipp3ej)](https://codecov.io/gh/nasa/openmct) [![npm version](https://img.shields.io/npm/v/openmct.svg)](https://www.npmjs.com/package/openmct) ![CodeQL](https://github.com/nasa/openmct/workflows/CodeQL/badge.svg)
   <a href="https://github.com/facebook/jest"><img src="https://img.shields.io/badge/tested_with-jest-99424f.svg" alt="Tested with Jest"></a>
   <a href="#license"><img src="https://img.shields.io/github/license/sourcerer-io/hall-of-fame.svg?colorB=ff0000"></a>
+<p>
 Skeleton Microservices Framework foi desenvolvido para proporcionar uma estrutura base para a implementação de microservices. Utilizando conceitos do Domain-Driven Design, Clean Architecture, padrões SOLID e práticas como código limpo, o projeto visa facilitar e acelerar o desenvolvimento de aplicações escaláveis e de fácil manutenção.
-
+</p>
 > [!NOTE]
 > Please visit our [Official Site](https://nasa.github.io/openmct/) and [Getting Started Guide](https://nasa.github.io/openmct/getting-started/)
 
