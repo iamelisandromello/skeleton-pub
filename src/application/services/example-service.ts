@@ -25,7 +25,7 @@ export class ExampleService implements ExampleUsecase {
       })
     }
 
-    console.log('isUSER::: ', isUser)
+    console.log('isUSER - ExampleService::: ', isUser)
 
     const wasPublished = await this.pubService.perform({
       email: isUser.email,
