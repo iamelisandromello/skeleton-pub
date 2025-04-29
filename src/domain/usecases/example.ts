@@ -1,5 +1,3 @@
-import type { UserEntity } from '@/domain/entities'
-
 export interface ExampleUsecase {
   perform: (params: ExampleUsecase.Params) => Promise<ExampleUsecase.Result>
 }
@@ -10,9 +8,7 @@ export namespace ExampleUsecase {
     accessToken: string
   }
 
-  export type SuccessResult = {
-    data: UserEntity
-  }
+  export type SuccessResult = true
 
   export type Result = SuccessResult | Error
 }
