@@ -2,7 +2,7 @@
     <br />
     <br />
     <a href="https://github.com">
-      <img src="https://private-user-images.githubusercontent.com/21144482/436623325-eb1e9cb3-72db-4d04-91e0-b66a7afb5f3c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDU4NzM4NDQsIm5iZiI6MTc0NTg3MzU0NCwicGF0aCI6Ii8yMTE0NDQ4Mi80MzY2MjMzMjUtZWIxZTljYjMtNzJkYi00ZDA0LTkxZTAtYjY2YTdhZmI1ZjNjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA0MjglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNDI4VDIwNTIyNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTRkNWRjYTNkOWJmYzlkNjdmZTE5YTAxMzk0ZWYyMWUzMmE4OGZkM2Q3Y2NkZTg1Nzc1Njg0MGM4NWYxMGQ5NWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.kmAlqx209foFN1fHPFcNWIwlwJFaqoSZQPMs9gxaph0" alt="Docusaurus"  alt="Skeleton Logo" width="200">
+      <img src="https://private-user-images.githubusercontent.com/21144482/436623325-eb1e9cb3-72db-4d04-91e0-b66a7afb5f3c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDU4NzM4NDQsIm5iZiI6MTc0NTg3MzU0NCwicGF0aCI6Ii8yMTE0NDQ4Mi80MzY2MjMzMjUtZWIxZTljYjMtNzJkYi00ZDA0LTkxZTAtYjY2YTdhZmI1ZjNjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA0MjglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNDI4VDIwNTIyNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTRkNWRjYTNkOWJmYzlkNjdmZTE5YTAxMzk0ZWYyMWUzMmE4OGZkM2Q3Y2NkZTg1Nzc1Njg0MGM4NWYxMGQ5NWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.kmAlqx209foFN1fHPFcNWIwlwJFaqoSZQPMs9gxaph0" alt="SkeletonPub"  alt="SkeletonPub Logo" width="200">
     </a>
     <p>Clean Architecture, design for serverless</p>
     <br />
@@ -23,18 +23,18 @@
   <a href="https://github.com/facebook/jest"><img src="https://img.shields.io/badge/tested_with-jest-99424f.svg" alt="Tested with Jest"></a>
   <a href="#license"><img src="https://img.shields.io/github/license/sourcerer-io/hall-of-fame.svg?colorB=ff0000"></a>
 <p>
-Skeleton Microservices Framework foi desenvolvido para proporcionar uma estrutura base para a implementação de microservices. Utilizando conceitos do Domain-Driven Design, Clean Architecture, padrões SOLID e práticas como código limpo, o projeto visa facilitar e acelerar o desenvolvimento de aplicações escaláveis e de fácil manutenção.
+SkeletonPub Microservices Framework foi desenvolvido para proporcionar uma estrutura base para a implementação de microservices. Utilizando conceitos do Domain-Driven Design, Clean Architecture, padrões SOLID e práticas como código limpo, o projeto visa facilitar e acelerar o desenvolvimento de aplicações escaláveis e de fácil manutenção.
 </p>
 > [!NOTE]
 > Please visit our [Repository Site](https://github.com/iamelisandromello/skeleton) and [Getting Started Guide](https://github.com/iamelisandromello/skeleton/blob/main/README.md)
 
-Depois de criar algo incrível com o Skeleton, mostre seu trabalho na nossa seção "Show and Tell" do GitHub Discussions. Adoramos ver implementações únicas e maravilhosas do microframework Skeleton!
+Depois de criar algo incrível com o SkeletonPub, mostre seu trabalho na nossa seção "Show and Tell" do GitHub Discussions. Adoramos ver implementações únicas e maravilhosas do microframework SkeletonPub!
 
 ![Skeleton Banner](https://private-user-images.githubusercontent.com/21144482/435825780-6a91069b-5683-43e0-982d-632235f14176.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDU4NzM5NTUsIm5iZiI6MTc0NTg3MzY1NSwicGF0aCI6Ii8yMTE0NDQ4Mi80MzU4MjU3ODAtNmE5MTA2OWItNTY4My00M2UwLTk4MmQtNjMyMjM1ZjE0MTc2LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA0MjglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNDI4VDIwNTQxNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTZlM2FiYzYwYzlmNGQ3MWVjZWY0YmQzODU5YzljMzUzOGQxMjdhODlkMTllYWIwZmE0NDY4NWI0ZGY2MmIxYzImWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.0fs2xz0r4FhdcXI7vMGb2cF6cZxIPTOYEoWL8hp0_3k)
 
 <div align="center">
   <h1 align="center">
-    Skeleton Project
+    SkeletonPub Project
   </h1>
 </div>
 
@@ -106,9 +106,9 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 Para mais informações, entre em contato através dos canais de comunicação do projeto.
 
 
-### Construindo e executando o Skeleton localmente
+### Construindo e executando o SkeletonPub localmente
 
-Construir e executar o Skeleton em seu ambiente de desenvolvimento local é muito fácil. Certifique-se de ter o Git e o Node.js instalados e siga as instruções abaixo. Precisa de mais informações? Confira a página "Como Começar" em nosso site. (Estas instruções pressupõem que você esteja instalando como um usuário não root; desenvolvedores relataram problemas ao executar estas etapas com privilégios de root.)
+Construir e executar o SkeletonPub em seu ambiente de desenvolvimento local é muito fácil. Certifique-se de ter o Git e o Node.js instalados e siga as instruções abaixo. Precisa de mais informações? Confira a página "Como Começar" em nosso site. (Estas instruções pressupõem que você esteja instalando como um usuário não root; desenvolvedores relataram problemas ao executar estas etapas com privilégios de root.)
 
 1. Clone the source code:
 
@@ -724,12 +724,12 @@ export abstract class Controller {
 
 ### Examples
 
-The clearest examples for developing projects with the Skeleton archetype are in the
+The clearest examples for developing projects with the SkeletonPub archetype are in the
 [tutorials](https://github.com/breathingcode-warkey/patterns-repository) provided in
 our documentation.
 
 > [!NOTE]
-Queremos que o Skeleton seja o mais fácil de usar, instalar, executar e desenvolver
+Queremos que o SkeletonPub seja o mais fácil de usar, instalar, executar e desenvolver
 > possível, e seu feedback nos ajudará a chegar lá!
 > O feedback pode ser fornecido por meio de [Problemas no GitHub](https://github.com/breathingcode-warkey/patterns-repository),
 > [Iniciando uma Discussão no GitHub](https://github.com/breathingcode-warkey),
@@ -844,4 +844,4 @@ All tests are located within the `e2e/tests/` directory and are identified by th
 
 ## Repositórios Relacionados
 
-> [!NOTE] Embora o Skeleton funcione como um projeto independente, ele é essencialmente um microframework extensível projetado para ser usado como dependência, com base no conceito de arquitetura como dependência, com plugins e pacotes de propriedade do usuário. Um ótimo exemplo de hospedagem do Skeleton em projetos serverless de produção é o WarKey.
+> [!NOTE] Embora o SkeletonPub funcione como um projeto independente, ele é essencialmente um microframework extensível projetado para ser usado como dependência, com base no conceito de arquitetura como dependência, com plugins e pacotes de propriedade do usuário. Um ótimo exemplo de hospedagem do SkeletonPub em projetos serverless de produção é o WarKey.
