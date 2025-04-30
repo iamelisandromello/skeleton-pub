@@ -18,12 +18,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+      
+      - name: Build TypeScript
+        run: npm run build
 
       - name: Setup Environment Variables
         run: echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-
-      - name: Create Lambda ZIP
-        run: zip -r ${{ env.PROJECT_NAME }}.zip src
+      
+      - name: Create Lambda ZIP from dist
+        run: zip -r ${{ env.PROJECT_NAME }}.zip dist
 
       - name: Upload Lambda ZIP to S3
         env:
