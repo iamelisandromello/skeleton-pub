@@ -25,8 +25,14 @@ jobs:
       - name: Setup Environment Variables
         run: echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
       
-      - name: Create Lambda ZIP from dist
-        run: zip -r ${{ env.PROJECT_NAME }}.zip dist
+      - name: Create Lambda ZIP with node_modules
+        run: |
+          mkdir -p lambda-package
+          cp -r dist/* lambda-package/
+          cp -r node_modules lambda-package/
+          cp package.json lambda-package/
+          cd lambda-package
+          zip -r ../${{ env.PROJECT_NAME }}.zip .
 
       - name: Upload Lambda ZIP to S3
         env:
