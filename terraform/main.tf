@@ -44,3 +44,31 @@ resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name              = "/aws/lambda/${var.project_name}"
   retention_in_days = 14
 }
+
+# ===============================
+# Recursos adicionados para a Fila SQS
+# ===============================
+
+# Criação da fila SQS
+resource "aws_sqs_queue" "my_queue" {
+  name = "${var.project_name}-queue"
+}
+
+# Permissão para a Lambda publicar mensagens na fila SQS
+resource "aws_iam_role_policy" "lambda_sqs_publish_policy" {
+  name = "${var.project_name}-lambda-sqs-publish"
+  role = aws_iam_role.lambda_execution_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "sqs:SendMessage"
+        ],
+        Resource = aws_sqs_queue.my_queue.arn
+      }
+    ]
+  })
+}
