@@ -7,7 +7,7 @@ import type {
   APIGatewayProxyResult
 } from 'aws-lambda/trigger/api-gateway-proxy'
 
-export const lambdaHandler = async (
+export const handler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult | undefined> => {
   const middlewareManager =
