@@ -31,7 +31,7 @@ resource "aws_iam_role" "lambda_execution_role" {
 resource "aws_lambda_function" "my_lambda_function" {
   function_name = var.project_name
   role          = aws_iam_role.lambda_execution_role.arn
-  handler       = "main/index.handler"
+  handler       = "main/index.lambdaHandler"
   runtime       = "nodejs20.x"
   s3_bucket     = aws_s3_bucket.lambda_code_bucket.bucket
   s3_key        = "${var.project_name}.zip"
