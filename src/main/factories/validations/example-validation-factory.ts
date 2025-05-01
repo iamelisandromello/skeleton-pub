@@ -17,7 +17,7 @@ export class ExampleValidationFactory {
 
   public make(): ValidationComposite {
     const validations: Validation<InputType>[] = []
-    for (const field of ['email', 'accessToken']) {
+    for (const field of ['email']) {
       validations.push(
         new RequireFieldValidation(
           field,

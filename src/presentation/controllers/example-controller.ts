@@ -11,7 +11,6 @@ import type { ExampleUsecase } from '@/domain/usecases'
 
 type Request = {
   email: string
-  accessToken: string
 }
 
 export class ExampleController extends Controller {
@@ -26,15 +25,14 @@ export class ExampleController extends Controller {
     const error = await this.validation.validate(request.body as InputType)
     if (error) return badRequest(error)
 
-    const { email, accessToken } = request.body as Request
+    const { email } = request.body as Request
 
-    if (typeof email !== 'string' || typeof accessToken !== 'string') {
+    if (typeof email !== 'string') {
       return badRequest(new Error('Invalid input types'))
     }
 
     const isResult = await this.exampleService.perform({
-      email,
-      accessToken
+      email
     })
 
     return isResult instanceof Error

@@ -2,8 +2,7 @@ import { eventMock } from '@/domain/mocks'
 
 const resource = '/blow/route'
 const body = {
-  email: 'elisandromello@hotmail.com',
-  accessToken: process.env.MOCK_ACCESS_TOKEN
+  email: 'johndoe@breathing.com'
 }
 
 export const exampleEventMock = {
