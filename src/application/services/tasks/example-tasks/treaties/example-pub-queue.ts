@@ -7,6 +7,6 @@ export interface ExampleQueueTreaty {
 }
 
 export namespace ExampleQueueTreaty {
-  export type Params = { email: string; username: string }
+  export type Params = UserEntity
   export type Result = boolean | Error
 }

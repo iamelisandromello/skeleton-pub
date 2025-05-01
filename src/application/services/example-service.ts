@@ -2,6 +2,8 @@ import type { ExamplePubQueueTask } from '@/application/services/tasks'
 import type { TreatmentErrorContract } from '@/application/contracts'
 import type { ExampleUsecase } from '@/domain/usecases'
 import { ErrorsEnum } from '@/domain/enums'
+import { mockUserRepository } from '@/domain/mocks'
+import type { UserEntity } from '@/domain/entities'
 
 export class ExampleService implements ExampleUsecase {
   constructor(
@@ -12,13 +14,11 @@ export class ExampleService implements ExampleUsecase {
   async perform(params: ExampleUsecase.Params): Promise<ExampleUsecase.Result> {
     const { email } = params
 
-    const isUser = {
-      email: email,
-      username: 'iamelisandromello'
-    }
+    const isUser: UserEntity = await mockUserRepository.findByEmail(email)
     console.log('isUSER - ExampleService::: ', isUser)
 
     const wasPublished = await this.pubService.perform({
+      name: isUser.name,
       email: isUser.email,
       username: isUser.username
     })

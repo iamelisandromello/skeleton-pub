@@ -12,6 +12,7 @@ export class ExamplePubQueueTask implements ExampleQueueTreaty {
       await this.pubInQueue.publish<ExampleQueueTreaty.Params>({
         type: typeQueue,
         payload: {
+          name: payload.name,
           email: payload.email,
           username: payload.username
         }
