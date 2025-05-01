@@ -36,6 +36,14 @@ resource "aws_lambda_function" "my_lambda_function" {
   s3_bucket     = aws_s3_bucket.lambda_code_bucket.bucket
   s3_key        = "${var.project_name}.zip"
   timeout       = 15
+
+  environment {
+    for_each = var.lambda_env_vars
+    variables = {
+      name  = each.key
+      value = each.value
+    }
+  }
 }
 
 # CloudWatch Log Group para a função Lambda com instrução de importação se já existir.

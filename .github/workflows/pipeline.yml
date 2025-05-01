@@ -49,6 +49,12 @@ jobs:
         run: terraform init
         working-directory: terraform
 
+      - name: Create environment JSON file for Terraform
+        run: |
+          echo '{
+            "lambda_env_vars": '${{ secrets.LAMBDA_ENV_VARS_JSON }}'
+          }' > terraform/lambda-env-vars.auto.tfvars.json
+
       - name: Import existing AWS resources
         run: |
           terraform import aws_s3_bucket.lambda_code_bucket meu-unico-bucket-s3 || echo "Bucket already managed"
