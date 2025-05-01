@@ -1,11 +1,11 @@
 {
 	"author": "Elisandro M Correa",
-	"name": "skeleton",
-	"description": "Clean Architecture skeleton for developing TypeScript projects with a focus on serverless solutions",
+	"name": "skeleton-pub",
+	"description": "Clean Architecture SkeletonPub for developing TypeScript projects with a focus on serverless solutions",
 	"version": "1.0.0",
 	"main": "index.js",
 	"keywords": [
-		"Skeleton",
+		"SkeletonPub",
 		"BreathingCode",
 		"Clean Architecture",
 		"TypeScript",
@@ -19,9 +19,6 @@
 		"@aws-sdk/client-sqs": "^3.699.0",
 		"env-var": "^7.5.0",
 		"module-alias": "^2.2.3",
-		"mongodb": "^6.15.0",
-		"mysql2": "^3.14.0",
-		"pg-promise": "^11.13.0",
 		"rimraf": "^6.0.1",
 		"validator": "^13.15.0"
 	},
