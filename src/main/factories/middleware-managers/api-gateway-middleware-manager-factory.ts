@@ -2,7 +2,6 @@ import {
   MiddlewareManager,
   AdaptRouteMiddleware,
   CheckRoutesMiddleware,
-  ConnectDatabaseMiddleware,
   type MiddlewareManagerInterface,
   ApiGatewayMiddlewareErrorHandler
 } from '@/main/config/middlewares'
@@ -41,9 +40,6 @@ export class ApiGatewayMiddlewareManagerFactory {
 
     this.instanceApiGatewayMiddleware.use([
       new CheckRoutesMiddleware(
-        TreatmentErrorAdapterFactory.getInstance().make()
-      ),
-      new ConnectDatabaseMiddleware(
         TreatmentErrorAdapterFactory.getInstance().make()
       ),
       new AdaptRouteMiddleware(

@@ -1,7 +1,4 @@
-import {
-  ExampleLoadUserTaskFactory,
-  ExamplePubQueueTaskFactory
-} from '@/main/factories/services/tasks'
+import { ExamplePubQueueTaskFactory } from '@/main/factories/services/tasks'
 import { TreatmentErrorAdapterFactory } from '@/main/factories/adapters'
 import { ExampleService } from '@/application/services'
 
@@ -22,7 +19,6 @@ export class ExampleServiceFactory {
   public make(): ExampleService {
     if (!this.exampleServiceInstance) {
       this.exampleServiceInstance = new ExampleService(
-        ExampleLoadUserTaskFactory.getInstance().make(),
         ExamplePubQueueTaskFactory.getInstance().make(),
         TreatmentErrorAdapterFactory.getInstance().make()
       )
