@@ -37,6 +37,8 @@ export class ExampleController extends Controller {
       accessToken
     })
 
-    return isResult instanceof Error ? handleError(isResult) : success(isResult)
+    return isResult instanceof Error
+      ? handleError(isResult)
+      : success('Message successfully published to SQS queue')
   }
 }
