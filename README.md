@@ -113,7 +113,7 @@ Construir e executar o SkeletonPub em seu ambiente de desenvolvimento local é m
 1. Clone the source code:
 
 ```sh
-git clone https://github.com/nasa/openmct.git
+git clone https://github.com/iamelisandromello/skeleton-pub
 ```
 
 2. (Optional) Install the correct node version using [nvm](https://github.com/nvm-sh/nvm):
@@ -738,7 +738,7 @@ Queremos que o SkeletonPub seja o mais fácil de usar, instalar, executar e dese
 ## Bibliotecas
 
 ### Dependências de Produção
-Certain terms are used throughout Open MCT with consistent meanings
+Certain terms are used throughout SkeletonPub with consistent meanings
 or conventions. Any deviations from the below are issues and should be
 addressed (either by updating this glossary or changing code to reflect
 correct usage.) Other developer documentation, particularly in-line
