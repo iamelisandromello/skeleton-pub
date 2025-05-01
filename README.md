@@ -135,9 +135,9 @@ npm start
 ```
 
 > [!IMPORTANT]
-> Open MCT is now running, and can be accessed by pointing a web browser at [http://localhost:8080/](http://localhost:8080/)
+> SkeletonPub is now running, and can be accessed by pointing a web browser at [http://localhost:8080/](http://localhost:8080/)
 
-Open MCT is built using [`npm`](http://npmjs.com/) and [`webpack`](https://webpack.js.org/).
+SkeletonPub is built using [`npm`](http://npmjs.com/) and [`webpack`](https://webpack.js.org/).
 
 ## 🏗️ Arquitetura
 
