@@ -38,11 +38,7 @@ resource "aws_lambda_function" "my_lambda_function" {
   timeout       = 15
 
   environment {
-    for_each = var.lambda_env_vars
-    variables = {
-      name  = each.key
-      value = each.value
-    }
+    variables = var.lambda_env_vars
   }
 }
 
