@@ -25,8 +25,8 @@ export class ExampleService implements ExampleUsecase {
 
     if (!wasPublished) {
       return this.treatment.launchError({
-        errorDescription: ErrorsEnum.NOT_FOUND_USER_ERROR,
-        messageDescription: `User not found: ${email}`
+        errorDescription: ErrorsEnum.PUBLISH_ERROR,
+        messageDescription: `Error publishing to queue: ${wasPublished}`
       })
     }
 

@@ -1,19 +1,15 @@
 import {
   ServerError,
   TimeOutError,
-  NotFoundError,
-  InvalidCPFError,
+  PublishError,
+  MiddlewareError,
   UnavailableError,
-  InvalidPhoneError,
   InvalidParamError,
   InvalidRouteError,
   MissingParamError,
   UnauthorizedError,
-  MicroserviceError,
   NotFoundUserError,
   NotFoundRouteError,
-  DatabaseConnectError,
-  IntegrationHubApiError,
   InvalidValueInEnumerableError
 } from '@/main/errors'
 import { ErrorsEnum } from '@/domain/enums'
@@ -37,19 +33,15 @@ export class ErrorContainerFactory {
     const errorsMap = new Map<ErrorsEnum, Error>([
       [ErrorsEnum.SERVER_ERROR, new ServerError()],
       [ErrorsEnum.TIME_OUT_ERROR, new TimeOutError()],
-      [ErrorsEnum.NOT_FOUND_ERROR, new NotFoundError('')],
-      [ErrorsEnum.INVALID_CPF_ERROR, new InvalidCPFError()],
+      [ErrorsEnum.PUBLISH_ERROR, new PublishError()],
+      [ErrorsEnum.MIDDLEWARE_ERROR, new MiddlewareError()],
       [ErrorsEnum.UNAVAILABLE_ERROR, new UnavailableError()],
       [ErrorsEnum.UNAUTHORIZED_ERROR, new UnauthorizedError()],
-      [ErrorsEnum.INVALID_PHONE_ERROR, new InvalidPhoneError()],
       [ErrorsEnum.INVALID_ROUTE_ERROR, new InvalidRouteError()],
-      [ErrorsEnum.MICROSERVICE_ERROR, new MicroserviceError('')],
       [ErrorsEnum.INVALID_PARAM_ERROR, new InvalidParamError('')],
       [ErrorsEnum.MISSING_PARAM_ERROR, new MissingParamError('')],
       [ErrorsEnum.NOT_FOUND_USER_ERROR, new NotFoundUserError('')],
       [ErrorsEnum.NOT_FOUND_ROUTE_ERROR, new NotFoundRouteError()],
-      [ErrorsEnum.DATABASE_CONNECT_ERROR, new DatabaseConnectError()],
-      [ErrorsEnum.INTEGRATION_HUB_API_ERROR, new IntegrationHubApiError()],
       [
         ErrorsEnum.INVALID_VALUE_IN_ENUMERABLE_ERROR,
         new InvalidValueInEnumerableError()
