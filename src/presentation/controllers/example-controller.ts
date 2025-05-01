@@ -37,6 +37,6 @@ export class ExampleController extends Controller {
 
     return isResult instanceof Error
       ? handleError(isResult)
-      : success('Message successfully published to SQS queue')
+      : success({ data: 'Message successfully published to SQS queue' })
   }
 }
