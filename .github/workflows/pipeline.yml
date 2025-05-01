@@ -66,9 +66,6 @@ jobs:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
         working-directory: terraform
 
-      - name: Print lambda-env-vars.auto.tfvars.json (debug)
-        run: cat terraform/lambda-env-vars.auto.tfvars.json
-
       - name: Terraform Apply
         run: |
           terraform apply -auto-approve
