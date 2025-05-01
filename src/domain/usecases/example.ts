@@ -5,7 +5,6 @@ export interface ExampleUsecase {
 export namespace ExampleUsecase {
   export type Params = {
     email: string
-    accessToken: string
   }
 
   export type SuccessResult = true
