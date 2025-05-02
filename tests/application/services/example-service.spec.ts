@@ -1,62 +1,62 @@
-import { ExampleService } from '@/application/services'
+import { fakeLaunchError } from '@/tests/helpers'
 import { ErrorsEnum } from '@/domain/enums'
-import type { ExampleLoadUserTreaty } from '@/application/services/tasks'
+import { ExampleService } from '@/application/services'
+import type { ExampleQueueTreaty } from '@/application/services/tasks'
 import type { TreatmentErrorContract } from '@/application/contracts'
-import type { UserEntity } from '@/domain/entities'
 
 describe('ExampleService', () => {
   let sut: ExampleService
-  let exampleLoadUser: jest.Mocked<ExampleLoadUserTreaty>
+  let examplePubQueue: jest.Mocked<ExampleQueueTreaty>
   let treatment: jest.Mocked<TreatmentErrorContract>
 
   beforeEach(() => {
-    exampleLoadUser = {
+    examplePubQueue = {
       perform: jest.fn()
-    } as jest.Mocked<ExampleLoadUserTreaty>
+    } as jest.Mocked<ExampleQueueTreaty>
     treatment = {
       launchError: jest.fn(),
       setMessage: jest.fn()
     } as jest.Mocked<TreatmentErrorContract>
-    sut = new ExampleService(exampleLoadUser, treatment)
+    sut = new ExampleService(examplePubQueue, treatment)
   })
 
   describe('perform', () => {
     const mockParams = {
+      email: 'test@example.com'
+    }
+
+    const mockQueueParams = {
       email: 'test@example.com',
-      accessToken: 'valid-token'
+      name: 'John Doe',
+      username: 'johndoe'
     }
 
     it('deve retornar os dados do usuário quando encontrado', async () => {
-      const mockUserData: UserEntity = {
-        email: 'test@example.com',
-        name: 'Test User',
-        username: 'testuser'
-      }
-      exampleLoadUser.perform.mockResolvedValueOnce(mockUserData)
+      const mockPubData: boolean = true
+      examplePubQueue.perform.mockResolvedValueOnce(mockPubData)
 
       const result = await sut.perform(mockParams)
 
-      expect(exampleLoadUser.perform).toHaveBeenCalledWith({
-        email: mockParams.email
-      })
-      expect(result).toEqual({ data: mockUserData })
+      expect(examplePubQueue.perform).toHaveBeenCalledWith(mockQueueParams)
+      expect(result).toEqual(true)
     })
 
-    it('deve lançar erro quando o usuário não for encontrado', async () => {
-      exampleLoadUser.perform.mockResolvedValueOnce(
-        null as unknown as UserEntity
-      )
-      const expectedError = new Error('User not found')
+    it('deve lançar erro quando a mensagem não for publicada com sucesso', async () => {
+      examplePubQueue.perform.mockResolvedValueOnce(false as unknown as boolean)
+
+      const expectedError = fakeLaunchError({
+        errorDescription: ErrorsEnum.PUBLISH_ERROR,
+        messageDescription: 'Error publishing to queue: false"'
+      })
+
       treatment.launchError.mockReturnValueOnce(expectedError)
 
       const result = await sut.perform(mockParams)
 
-      expect(exampleLoadUser.perform).toHaveBeenCalledWith({
-        email: mockParams.email
-      })
+      expect(examplePubQueue.perform).toHaveBeenCalledWith(mockQueueParams)
       expect(treatment.launchError).toHaveBeenCalledWith({
-        errorDescription: ErrorsEnum.NOT_FOUND_USER_ERROR,
-        messageDescription: `User not found: ${mockParams.email}`
+        errorDescription: ErrorsEnum.PUBLISH_ERROR,
+        messageDescription: 'Error publishing to queue: false'
       })
       expect(result).toEqual(expectedError)
     })

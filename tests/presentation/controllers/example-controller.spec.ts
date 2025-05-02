@@ -18,13 +18,7 @@ const makeExampleService = (): ExampleUsecase => {
     async perform(
       params: ExampleUsecase.Params
     ): Promise<ExampleUsecase.Result> {
-      return {
-        data: {
-          email: 'test@example.com',
-          name: 'Test User',
-          username: 'testuser'
-        }
-      }
+      return true
     }
   }
   return new ExampleServiceStub()
@@ -89,8 +83,7 @@ describe('ExampleController', () => {
 
     const httpRequest: HttpRequest = {
       body: {
-        email: 'test@example.com',
-        accessToken: 'any_token'
+        email: 'test@example.com'
       },
       query: {},
       path: '/example'
@@ -98,8 +91,7 @@ describe('ExampleController', () => {
 
     await sut.perform(httpRequest)
     expect(performSpy).toHaveBeenCalledWith({
-      email: 'test@example.com',
-      accessToken: 'any_token'
+      email: 'test@example.com'
     })
   })
 
@@ -108,8 +100,7 @@ describe('ExampleController', () => {
 
     const httpRequest: HttpRequest = {
       body: {
-        email: 'test@example.com',
-        accessToken: 'any_token'
+        email: 'test@example.com'
       },
       query: {},
       path: '/example'
@@ -118,11 +109,7 @@ describe('ExampleController', () => {
     const httpResponse = await sut.perform(httpRequest)
     expect(httpResponse).toEqual(
       success({
-        data: {
-          email: 'test@example.com',
-          name: 'Test User',
-          username: 'testuser'
-        }
+        data: 'Message successfully published to SQS queue'
       })
     )
   })

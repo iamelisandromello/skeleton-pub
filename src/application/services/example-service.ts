@@ -1,4 +1,4 @@
-import type { ExamplePubQueueTask } from '@/application/services/tasks'
+import type { ExampleQueueTreaty } from '@/application/services/tasks'
 import type { TreatmentErrorContract } from '@/application/contracts'
 import type { ExampleUsecase } from '@/domain/usecases'
 import { ErrorsEnum } from '@/domain/enums'
@@ -7,7 +7,7 @@ import type { UserEntity } from '@/domain/entities'
 
 export class ExampleService implements ExampleUsecase {
   constructor(
-    private readonly pubService: ExamplePubQueueTask,
+    private readonly pubService: ExampleQueueTreaty,
     private readonly treatment: TreatmentErrorContract
   ) {}
 
