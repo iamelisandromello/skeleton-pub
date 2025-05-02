@@ -30,7 +30,7 @@
 		"start": "node -r dotenv/config dist/main/index",
 		"lint": "npx @biomejs/biome check src",
 		"lint:format": "npx @biomejs/biome check --write src",
-		"test": "jest --passWithNoTests"
+		"test": "jest --passWithNoTests --no-cache --runInBand"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
