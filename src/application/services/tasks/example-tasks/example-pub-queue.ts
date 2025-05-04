@@ -7,7 +7,7 @@ export class ExamplePubQueueTask implements ExampleQueueTreaty {
   async perform(
     payload: ExampleQueueTreaty.Params
   ): Promise<ExampleQueueTreaty.Result> {
-    const typeQueue = 'process-payment-publi-post'
+    const typeQueue = 'process-publi-message'
     const wasPublished =
       await this.pubInQueue.publish<ExampleQueueTreaty.Params>({
         type: typeQueue,
