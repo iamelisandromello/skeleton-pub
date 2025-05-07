@@ -9,6 +9,7 @@ export class SQSPublisher implements PublisherContract {
   ) {}
 
   async publish<T>(message: QueueMessage<T>): Promise<boolean> {
+    console.log('Publishing message to SQS:', message)
     const params: SendMessageParams = {
       QueueUrl: this.queueUrl,
       MessageBody: JSON.stringify(message)
