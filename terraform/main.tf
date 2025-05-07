@@ -22,13 +22,6 @@ resource "aws_iam_role" "lambda_execution_role" {
         Principal = {
           Service: "lambda.amazonaws.com"
         }
-      },
-      {
-        Effect = "Allow",
-        Action = [
-          "logs:*"
-        ],
-        Resource = "arn:aws:logs:${var.region}:*:log-group:/aws/lambda/${var.project_name}:*"
       }
     ]
   })
