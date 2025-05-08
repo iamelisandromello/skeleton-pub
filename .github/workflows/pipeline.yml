@@ -7,24 +7,26 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-1
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4 
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install dependencies
         run: npm install
-      
+
       - name: Build TypeScript
         run: npm run build
 
       - name: Setup Environment Variables
         run: echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-      
+
       - name: Create Lambda ZIP with node_modules
         run: |
           mkdir -p lambda-package
@@ -55,9 +57,18 @@ jobs:
 
       - name: Import existing AWS resources
         run: |
-          terraform import aws_s3_bucket.lambda_code_bucket meu-unico-bucket-s3 || echo "Bucket already managed"
-          terraform import aws_iam_role.lambda_execution_role ${{ env.PROJECT_NAME }}_execution_role || echo "Role already managed"
-          terraform import aws_cloudwatch_log_group.lambda_log_group "/aws/lambda/${{ env.PROJECT_NAME }}" || echo "Log group already managed"
+          export QUEUE_NAME="${{ env.PROJECT_NAME }}-queue"
+          export AWS_REGION="${{ env.AWS_REGION }}"
+          QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null)
+          if [ -n "$QUEUE_URL" ]; then
+            echo "Importando a fila SQS existente: $QUEUE_URL"
+            terraform import aws_sqs_queue.my_queue "$QUEUE_URL"
+          else
+            echo "Fila '$QUEUE_NAME' não encontrada na região '$AWS_REGION'."
+          fi
+          terraform import aws_s3_bucket.lambda_code_bucket meu-unico-bucket-s3 || echo "Bucket já gerenciado"
+          terraform import aws_iam_role.lambda_execution_role ${{ env.PROJECT_NAME }}_execution_role || echo "Role já gerenciada"
+          terraform import aws_cloudwatch_log_group.lambda_log_group "/aws/lambda/${{ env.PROJECT_NAME }}" || echo "Log group já gerenciado"
           terraform import aws_lambda_function.my_lambda_function ${{ env.PROJECT_NAME }}
         continue-on-error: true
         env:
@@ -67,8 +78,7 @@ jobs:
         working-directory: terraform
 
       - name: Terraform Apply
-        run: |
-          terraform apply -auto-approve
+        run: terraform apply -auto-approve
         working-directory: terraform
         env:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
