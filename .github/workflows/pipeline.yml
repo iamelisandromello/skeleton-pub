@@ -77,6 +77,14 @@ jobs:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
         working-directory: terraform
 
+      - name: Terraform Plan
+        run: terraform plan -input=false
+        working-directory: terraform
+        env:
+          TF_VAR_project_name: ${{ env.PROJECT_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}        
+
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: terraform
