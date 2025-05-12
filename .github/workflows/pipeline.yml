@@ -197,7 +197,7 @@ jobs:
       # 🧪 TERRAFORM PLAN & APPLY
       # -------------------------------
       - name: Terraform Plan
-        run: terraform plan -input=false
+        run: terraform plan -input=false -var "environment=${{ env.ENVIRONMENT }}"
         working-directory: terraform
         env:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
@@ -206,7 +206,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var "environment=${{ env.ENVIRONMENT }}"
         working-directory: terraform
         env:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
