@@ -7,9 +7,9 @@ variable "project_name" {
   type        = string
 }
 
-variable "lambda_env_vars" {
-  description = "Mapa de variáveis de ambiente para a função Lambda por ambiente"
+variable "environment" {
   type        = map(map(string))
+  description = "Ambiente (dev, prod, preview, etc.)"
 }
   
 # =========================
@@ -18,7 +18,7 @@ variable "lambda_env_vars" {
 
 variable "lambda_env_vars" {
   description = "Mapa de variáveis de ambiente para a função Lambda"
-  type        = map(string)
+  type        = map(map(string))
   default     = {}
 }
 
