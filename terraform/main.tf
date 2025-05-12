@@ -1,15 +1,24 @@
+# =======================================
+# 🌍 AWS PROVIDER CONFIGURATION
+# =======================================
 provider "aws" {
   region = var.region
 }
 
-# Bucket S3 para guardar o código zipado da função Lambda.
-# Sem instrução de criação, pois deve ser sempre importado e reutilizado conforme regras de negócio.
+# =======================================
+# ☁️ S3 BUCKET (IMPORTADO, NÃO CRIAR)
+# =======================================
+# Usado para armazenar o artefato zip da função Lambda.
+# Sempre reutilizado/importado. Não deve ser gerenciado pela criação.
 resource "aws_s3_bucket" "lambda_code_bucket" {
   bucket = "meu-unico-bucket-s3"
 }
 
-# IAM Role para a execução das funções Lambda.
-# Sem instrução de criação, deve ser importada caso exista, conforme regras de negócio.
+# =======================================
+# 🔐 IAM ROLE E POLÍTICAS PARA LAMBDA
+# =======================================
+# Role básica de execução da Lambda
+# Também deve ser importada caso exista.
 resource "aws_iam_role" "lambda_execution_role" {
   name = "${var.project_name}_execution_role"
 
@@ -27,7 +36,7 @@ resource "aws_iam_role" "lambda_execution_role" {
   })
 }
 
-# Inline policy para a Lambda poder escrever logs no CloudWatch
+# Política de logs para CloudWatch
 resource "aws_iam_role_policy" "lambda_logging_policy" {
   name = "${var.project_name}_logging_policy"
   role = aws_iam_role.lambda_execution_role.id
@@ -48,13 +57,18 @@ resource "aws_iam_role_policy" "lambda_logging_policy" {
   })
 }
 
-# CloudWatch Log Group para a função Lambda
+# =======================================
+# 📊 CLOUDWATCH LOG GROUP
+# =======================================
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name              = "/aws/lambda/${var.project_name}"
   retention_in_days = 14
 }
 
-# Função Lambda que deverá ser atualizada em caso de existência, nunca criar uma duplicata.
+# =======================================
+# 🧠 FUNÇÃO LAMBDA
+# =======================================
+# Deve ser atualizada caso exista — nunca duplicada.
 resource "aws_lambda_function" "my_lambda_function" {
   function_name = var.project_name
   role          = aws_iam_role.lambda_execution_role.arn
@@ -71,16 +85,16 @@ resource "aws_lambda_function" "my_lambda_function" {
   depends_on = [aws_iam_role_policy.lambda_logging_policy]
 }
 
-# ===============================
-# Recursos adicionados para a Fila SQS
-# ===============================
+# =======================================
+# 📬 SQS QUEUE + PERMISSÕES
+# =======================================
 
-# Criação da fila SQS
+# Fila SQS associada à aplicação
 resource "aws_sqs_queue" "my_queue" {
   name = "${var.project_name}-queue"
 }
 
-# Permissão para a Lambda publicar mensagens na fila SQS
+# Política que permite à Lambda enviar mensagens para a fila SQS
 resource "aws_iam_role_policy" "lambda_sqs_publish_policy" {
   name = "${var.project_name}-lambda-sqs-publish"
   role = aws_iam_role.lambda_execution_role.id
