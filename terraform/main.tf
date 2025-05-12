@@ -20,7 +20,7 @@ data "aws_s3_bucket" "lambda_code_bucket" {
 # Role básica de execução da Lambda
 # Também deve ser importada caso exista.
 resource "aws_iam_role" "lambda_execution_role" {
-  name = "${var.project_name}_execution_role"
+  name = local.lambda_role_name
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -38,7 +38,7 @@ resource "aws_iam_role" "lambda_execution_role" {
 
 # Política de logs para CloudWatch
 resource "aws_iam_role_policy" "lambda_logging_policy" {
-  name = "${var.project_name}_logging_policy"
+  name = local.logging_policy_name
   role = aws_iam_role.lambda_execution_role.id
 
   policy = jsonencode({
@@ -51,7 +51,7 @@ resource "aws_iam_role_policy" "lambda_logging_policy" {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ],
-        Resource = "arn:aws:logs:${var.region}:*:log-group:/aws/lambda/${var.project_name}:*"
+        Resource = "arn:aws:logs:${var.region}:*:log-group:${local.log_group_name}:*"
       }
     ]
   })
@@ -61,7 +61,7 @@ resource "aws_iam_role_policy" "lambda_logging_policy" {
 # 📊 CLOUDWATCH LOG GROUP
 # =======================================
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
-  name              = "/aws/lambda/${var.project_name}"
+  name              = local.log_group_name
   retention_in_days = 14
 }
 
@@ -70,12 +70,12 @@ resource "aws_cloudwatch_log_group" "lambda_log_group" {
 # =======================================
 # Deve ser atualizada caso exista — nunca duplicada.
 resource "aws_lambda_function" "my_lambda_function" {
-  function_name = var.project_name
+  function_name = local.lambda_name 
   role          = aws_iam_role.lambda_execution_role.arn
   handler       = "main/app.handler"
   runtime       = "nodejs20.x"
   s3_bucket     = data.aws_s3_bucket.lambda_code_bucket.bucket
-  s3_key        = "${var.project_name}.zip"
+  s3_key        = local.s3_object_key
   timeout       = 15
 
   environment {
@@ -91,12 +91,12 @@ resource "aws_lambda_function" "my_lambda_function" {
 
 # Fila SQS associada à aplicação
 resource "aws_sqs_queue" "my_queue" {
-  name = "${var.project_name}-queue"
+  name = local.queue_name
 }
 
 # Política que permite à Lambda enviar mensagens para a fila SQS
 resource "aws_iam_role_policy" "lambda_sqs_publish_policy" {
-  name = "${var.project_name}-lambda-sqs-publish"
+  name = local.publish_policy_name
   role = aws_iam_role.lambda_execution_role.id
 
   policy = jsonencode({
