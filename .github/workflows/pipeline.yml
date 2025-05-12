@@ -75,7 +75,7 @@ jobs:
       - name: Extrair nome do bucket S3 das env vars
         id: extract_bucket
         run: |
-          echo '${{ secrets.LAMBDA_ENV_VARS_JSON }}' | jq -r '.S3_BUCKET_NAME' > bucket_name.txt
+          echo '${{ secrets.GLOBAL_ENV_VARS_JSON }}' | jq -r '.S3_BUCKET_NAME' > bucket_name.txt
           echo "S3_BUCKET_NAME=$(cat bucket_name.txt)" >> $GITHUB_ENV
 
       - name: Debug S3 Bucket Name
@@ -114,7 +114,12 @@ jobs:
       # -------------------------------
       - name: Create environment JSON file for Terraform
         run: |
-          printf '{"lambda_env_vars": %s}\n' '${{ secrets.LAMBDA_ENV_VARS_JSON }}' > terraform/lambda-env-vars.auto.tfvars.json
+          printf '{"environments": %s}\n' '${{ secrets.ENVIRONMENTS }}' > terraform/environments.auto.tfvars.json
+      
+      - name: Create global ENV vars tfvars file for Terraform
+        run: |
+          printf '{"global_env_vars": %s}\n' '${{ secrets.GLOBAL_ENV_VARS_JSON }}' > terraform/global-env-vars.auto.tfvars.json
+        
 
       - name: Verificar acesso ao S3
         run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}
