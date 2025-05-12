@@ -92,7 +92,6 @@ jobs:
             echo "Fila '$QUEUE_NAME' não encontrada na região '$AWS_REGION'."
           fi
 
-          terraform import aws_s3_bucket.lambda_code_bucket meu-unico-bucket-s3 || echo "Bucket já gerenciado"
           terraform import aws_iam_role.lambda_execution_role ${{ env.PROJECT_NAME }}_execution_role || echo "Role já gerenciada"
           terraform import aws_cloudwatch_log_group.lambda_log_group "/aws/lambda/${{ env.PROJECT_NAME }}" || echo "Log group já gerenciado"
           terraform import aws_lambda_function.my_lambda_function ${{ env.PROJECT_NAME }}
