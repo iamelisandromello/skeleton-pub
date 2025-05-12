@@ -18,13 +18,16 @@ variable "environment" {
 
 variable "global_env_vars" {
   description = "Mapa de ambientes com suas respectivas variáveis de ambiente para a Lambda"
-  type        = map(map(string))
+  type        = map(string)
 }
 
 variable "environments" {
-  type        = map(string)
   description = "Ambiente (dev, prod, preview, etc.)"
-  default     = {}
+  type = map(object({
+    LOG_LEVEL = string
+    DB_HOST   = string
+    DB_NAME   = string
+  }))
 }
 
 variable "s3_bucket_name" {
