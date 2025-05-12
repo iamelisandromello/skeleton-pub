@@ -82,6 +82,8 @@ jobs:
       # -------------------------------
       - name: Import existing AWS resources
         run: |
+          set -e  # ⛔ Interrompe o script ao primeiro erro
+          
           export AWS_REGION="${{ env.AWS_REGION }}"
           export PROJECT_NAME="${{ env.PROJECT_NAME }}"
           export QUEUE_NAME="${PROJECT_NAME}-queue"
@@ -104,14 +106,14 @@ jobs:
           echo "✅ Bucket S3 é tratado como data source, não requer import."
       
           # --- Importar IAM Role, se existir ---
-          echo "🔍 Verificando existência da IAM Role '$ROLE_NAME'..."
-          if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
-            echo "✅ IAM Role encontrada. Importando..."
-            terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"
-          else
-            echo "❌ IAM Role '$ROLE_NAME' não encontrada. Terraform irá criá-la no apply."
-          fi
-      
+            echo "🔍 Verificando existência da IAM Role '$ROLE_NAME'..."
+            if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
+              echo "✅ IAM Role encontrada. Importando..."
+              terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"
+            else
+              echo "❌ IAM Role '$ROLE_NAME' não encontrada. Terraform irá criá-la no apply."
+            fi
+                
           # --- Importar CloudWatch Log Group, se existir ---
           echo "🔍 Verificando existência do CloudWatch Log Group '$LOG_GROUP_NAME'..."
           if aws logs describe-log-groups --log-group-name-prefix "$LOG_GROUP_NAME" --region "$AWS_REGION" | grep "$LOG_GROUP_NAME" &>/dev/null; then
