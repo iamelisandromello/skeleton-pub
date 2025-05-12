@@ -56,7 +56,7 @@ jobs:
         env:
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
         run: |
-          echo "sando bucket: $S3_BUCKET_NAME"
+          echo "Usando bucket: $S3_BUCKET_NAME"
 
       - name: Upload Lambda ZIP to S3
         env:
@@ -89,6 +89,12 @@ jobs:
       - name: Create environment JSON file for Terraform
         run: |
           printf '{"lambda_env_vars": %s}\n' '${{ secrets.LAMBDA_ENV_VARS_JSON }}' > terraform/lambda-env-vars.auto.tfvars.json
+
+      - name: Verificar acesso ao S3
+        run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # -------------------------------
       # 🔄 IMPORT EXISTING RESOURCES
@@ -148,6 +154,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_s3_bucket_name: ${{ secrets.S3_BUCKET_NAME }}
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
         working-directory: terraform
       
