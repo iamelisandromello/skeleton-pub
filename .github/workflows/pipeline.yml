@@ -9,7 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: us-east-1
+
     steps:
+      # -------------------------------
+      # 🧾 CHECKOUT & NODE SETUP
+      # -------------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -18,15 +22,24 @@ jobs:
         with:
           node-version: 20
 
+      # -------------------------------
+      # 📦 DEPENDENCIES & BUILD
+      # -------------------------------
       - name: Install dependencies
         run: npm install
 
       - name: Build TypeScript
         run: npm run build
 
+      # -------------------------------
+      # ⚙️ SETUP ENVIRONMENT
+      # -------------------------------
       - name: Setup Environment Variables
         run: echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
+      # -------------------------------
+      # 📁 PACKAGE LAMBDA FUNCTION
+      # -------------------------------
       - name: Create Lambda ZIP with node_modules
         run: |
           mkdir -p lambda-package
@@ -36,12 +49,18 @@ jobs:
           cd lambda-package
           zip -r ../${{ env.PROJECT_NAME }}.zip .
 
+      # -------------------------------
+      # ☁️ UPLOAD PACKAGE TO S3
+      # -------------------------------
       - name: Upload Lambda ZIP to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: aws s3 cp ${{ env.PROJECT_NAME }}.zip s3://meu-unico-bucket-s3/${{ env.PROJECT_NAME }}.zip
 
+      # -------------------------------
+      # 🛠️ SETUP TERRAFORM
+      # -------------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -51,10 +70,16 @@ jobs:
         run: terraform init
         working-directory: terraform
 
+      # -------------------------------
+      # 🧾 GENERATE TFVARS FROM SECRETS
+      # -------------------------------
       - name: Create environment JSON file for Terraform
         run: |
           printf '{"lambda_env_vars": %s}\n' '${{ secrets.LAMBDA_ENV_VARS_JSON }}' > terraform/lambda-env-vars.auto.tfvars.json
 
+      # -------------------------------
+      # 🔄 IMPORT EXISTING RESOURCES
+      # -------------------------------
       - name: Import existing AWS resources
         run: |
           export QUEUE_NAME="${{ env.PROJECT_NAME }}-queue"
@@ -66,6 +91,7 @@ jobs:
           else
             echo "Fila '$QUEUE_NAME' não encontrada na região '$AWS_REGION'."
           fi
+
           terraform import aws_s3_bucket.lambda_code_bucket meu-unico-bucket-s3 || echo "Bucket já gerenciado"
           terraform import aws_iam_role.lambda_execution_role ${{ env.PROJECT_NAME }}_execution_role || echo "Role já gerenciada"
           terraform import aws_cloudwatch_log_group.lambda_log_group "/aws/lambda/${{ env.PROJECT_NAME }}" || echo "Log group já gerenciado"
@@ -77,13 +103,16 @@ jobs:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
         working-directory: terraform
 
+      # -------------------------------
+      # 🧪 TERRAFORM PLAN & APPLY
+      # -------------------------------
       - name: Terraform Plan
         run: terraform plan -input=false
         working-directory: terraform
         env:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}        
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
