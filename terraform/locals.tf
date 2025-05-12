@@ -6,6 +6,7 @@ locals {
   publish_policy_name  = "${var.project_name}-lambda-sqs-publish"
 
   # Infraestrutura associada
+  s3_bucket_name       = var.s3_bucket_name
   log_group_name       = "/aws/lambda/${var.project_name}"
   s3_object_key        = "${var.project_name}.zip"
   queue_name           = "${var.project_name}-queue"

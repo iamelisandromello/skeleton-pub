@@ -16,3 +16,8 @@ variable "lambda_env_vars" {
   type        = map(string)
   default     = {}
 }
+
+variable "s3_bucket_name" {
+  description = "Nome do bucket S3 onde o artefato da Lambda será armazenado"
+  type        = string
+}

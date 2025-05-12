@@ -11,7 +11,7 @@ provider "aws" {
 # Usado para armazenar o artefato zip da função Lambda.
 # Sempre reutilizado/importado. Não deve ser gerenciado pela criação.
 data "aws_s3_bucket" "lambda_code_bucket" {
-  bucket = "meu-unico-bucket-s3"
+  bucket = var.s3_bucket_name
 }
 
 # =======================================
