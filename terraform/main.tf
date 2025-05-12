@@ -79,7 +79,7 @@ resource "aws_lambda_function" "my_lambda_function" {
   timeout       = 15
 
   environment {
-    variables = var.lambda_env_vars[var.environment]
+    variables = var.global_env_vars[var.environment]
   }
 
   depends_on = [aws_iam_role_policy.lambda_logging_policy]
