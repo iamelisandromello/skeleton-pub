@@ -73,11 +73,10 @@ jobs:
       # ☁️ UPLOAD PACKAGE TO S3
       # -------------------------------
       - name: Extrair nome do bucket S3 das env vars
-        id: extract_bucket
         run: |
-          echo '${{ secrets.GLOBAL_ENV_VARS_JSON }}' | jq -r '.S3_BUCKET_NAME' > bucket_name.txt
-          echo "S3_BUCKET_NAME=$(cat bucket_name.txt)" >> $GITHUB_ENV
-
+          BUCKET_NAME=$(echo "${{ secrets.GLOBAL_ENV_VARS_JSON }}" | jq -r 'fromjson.S3_BUCKET_NAME')
+          echo "S3_BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
+      
       - name: Debug S3 Bucket Name
         run: |
           echo "Usando bucket: $S3_BUCKET_NAME"
