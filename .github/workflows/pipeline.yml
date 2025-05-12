@@ -104,7 +104,6 @@ jobs:
           terraform workspace select ${{ env.ENVIRONMENT }} || terraform workspace new ${{ env.ENVIRONMENT }}
         working-directory: terraform
         env:
-          TF_WORKSPACE: ${{ env.ENVIRONMENT }}          
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
           TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
