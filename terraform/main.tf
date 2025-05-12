@@ -10,7 +10,7 @@ provider "aws" {
 # =======================================
 # Usado para armazenar o artefato zip da função Lambda.
 # Sempre reutilizado/importado. Não deve ser gerenciado pela criação.
-resource "aws_s3_bucket" "lambda_code_bucket" {
+data "aws_s3_bucket" "lambda_code_bucket" {
   bucket = "meu-unico-bucket-s3"
 }
 
@@ -74,7 +74,7 @@ resource "aws_lambda_function" "my_lambda_function" {
   role          = aws_iam_role.lambda_execution_role.arn
   handler       = "main/app.handler"
   runtime       = "nodejs20.x"
-  s3_bucket     = aws_s3_bucket.lambda_code_bucket.bucket
+  s3_bucket     = data.aws_s3_bucket.lambda_code_bucket.bucket
   s3_key        = "${var.project_name}.zip"
   timeout       = 15
 
