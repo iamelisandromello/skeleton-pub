@@ -52,12 +52,18 @@ jobs:
       # -------------------------------
       # ☁️ UPLOAD PACKAGE TO S3
       # -------------------------------
+      - name: Debug S3 Bucket Name
+        env:
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+        run: |
+          echo "sando bucket: $S3_BUCKET_NAME"
+
       - name: Upload Lambda ZIP to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-        run: aws s3 cp ${{ env.PROJECT_NAME }}.zip s3://${{ env.S3_BUCKET_NAME }}/${{ env.PROJECT_NAME }}.zip
+        run: aws s3 cp ${{ env.PROJECT_NAME }}.zip s3://$S3_BUCKET_NAME/${{ env.PROJECT_NAME }}.zip
 
 
       # -------------------------------
@@ -71,6 +77,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: terraform
+        env:
+          TF_VAR_project_name: ${{ env.PROJECT_NAME }}
+          TF_VAR_s3_bucket_name: ${{ secrets.S3_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # -------------------------------
       # 🧾 GENERATE TFVARS FROM SECRETS
@@ -78,12 +89,6 @@ jobs:
       - name: Create environment JSON file for Terraform
         run: |
           printf '{"lambda_env_vars": %s}\n' '${{ secrets.LAMBDA_ENV_VARS_JSON }}' > terraform/lambda-env-vars.auto.tfvars.json
-
-      # -------------------------------
-      # 🔄 INIT EXISTING RESOURCES
-      # -------------------------------
-      - name: Terraform Init (for importing)
-        run: terraform init
 
       # -------------------------------
       # 🔄 IMPORT EXISTING RESOURCES
@@ -155,6 +160,7 @@ jobs:
         working-directory: terraform
         env:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
+          TF_VAR_s3_bucket_name: ${{ secrets.S3_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -163,5 +169,6 @@ jobs:
         working-directory: terraform
         env:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
+          TF_VAR_s3_bucket_name: ${{ secrets.S3_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

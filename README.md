@@ -24,7 +24,7 @@
 <p></p>
 Skeleton Microservices Framework foi desenvolvido para proporcionar uma estrutura base para a implementação de microservices. Utilizando conceitos do Domain-Driven Design, Clean Architecture, padrões SOLID e práticas como código limpo, o projeto visa facilitar e acelerar o desenvolvimento de aplicações escaláveis e de fácil manutenção.
 
-> [!NOTE]
+> [!NOTA]
 > 
 
 Depois de criar algo incrível com o Skeleton, mostre seu trabalho na nossa seção "Show and Tell" do GitHub Discussions. Adoramos ver implementações únicas e maravilhosas do microframework Skeleton!
@@ -109,31 +109,31 @@ Para mais informações, entre em contato através dos canais de comunicação d
 
 Construir e executar o Skeleton em seu ambiente de desenvolvimento local é muito fácil. Certifique-se de ter o Git e o Node.js instalados e siga as instruções abaixo. Precisa de mais informações? Confira a página "Como Começar" em nosso site. (Estas instruções pressupõem que você esteja instalando como um usuário não root; desenvolvedores relataram problemas ao executar estas etapas com privilégios de root.)
 
-1. Clone the source code:
+1. Clone o código fonte:
 
 ```sh
 git clone https://github.com/iamelisandromello/skeleton-pub
 ```
 
-2. (Optional) Install the correct node version using [nvm](https://github.com/nvm-sh/nvm):
+2. (Opciona) Instale a versão correta do nó usando [nvm](https://github.com/nvm-sh/nvm):
 
 ```sh
 nvm install
 ```
 
-3. Install development dependencies (Note: Check the `package.json` engine for our tested and supported node versions):
+3. Instalar dependências de desenvolvimento (Observação: verifique o mecanismo `package.json` para nossas versões de nó testadas e suportadas):
 
 ```sh
 npm install
 ```
 
-4. Run a local development server:
+4. Execute um servidor de desenvolvimento local:
 
 ```
 npm start
 ```
 
-> [!IMPORTANT]
+> [!IMPORTANTE]
 > 
 
 
@@ -839,4 +839,4 @@ Todos os testes estão localizados no diretório ./tests/ e são identificados p
 
 ## Repositórios Relacionados
 
-> [!NOTE] Embora o Skeleton funcione como um projeto independente, ele é essencialmente um microframework extensível projetado para ser usado como dependência, com base no conceito de arquitetura como dependência, com plugins e pacotes de propriedade do usuário. Um ótimo exemplo de hospedagem do Skeleton em projetos serverless de produção é o WarKey.
+> [!NOTA] Embora o Skeleton funcione como um projeto independente, ele é essencialmente um microframework extensível projetado para ser usado como dependência, com base no conceito de arquitetura como dependência, com plugins e pacotes de propriedade do usuário. Um ótimo exemplo de hospedagem do Skeleton em projetos serverless de produção é o WarKey.
