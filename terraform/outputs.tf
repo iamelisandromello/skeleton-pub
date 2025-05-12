@@ -6,6 +6,10 @@ output "bucket_name" {
   value = data.aws_s3_bucket.lambda_code_bucket.bucket
 }
 
+output "s3_bucket_name" {
+  value = var.s3_bucket_name
+}
+
 output "lambda_function_name" {
   value = aws_lambda_function.my_lambda_function.function_name
 }
