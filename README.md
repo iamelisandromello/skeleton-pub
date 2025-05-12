@@ -1,11 +1,10 @@
 <div align="center">
     <br />
     <br />
-    <a href="https://github.com">
-      <img src="https://private-user-images.githubusercontent.com/21144482/436623325-eb1e9cb3-72db-4d04-91e0-b66a7afb5f3c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDY2NjcxMzAsIm5iZiI6MTc0NjY2NjgzMCwicGF0aCI6Ii8yMTE0NDQ4Mi80MzY2MjMzMjUtZWIxZTljYjMtNzJkYi00ZDA0LTkxZTAtYjY2YTdhZmI1ZjNjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA1MDglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNTA4VDAxMTM1MFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTc2ZjA1MDBiNzY2OGQ0OGI1NjUxMjA2MWY1OTE5MjI2YmUxZmVlNDc4ZDRhYzQ0YjMzMTk3MDcwY2Q2NGJmNWUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.JNrPIjWJ0z5V3QCmhIJW7mb38wUPZmx9uOfgWKtCerg" alt="SkeletonPub"  alt="SkeletonPub Logo" width="200">
+    <a href="https://github.com/iamelisandromello">
+      <img src="https://private-user-images.githubusercontent.com/21144482/436623325-eb1e9cb3-72db-4d04-91e0-b66a7afb5f3c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDcwNjA2NTEsIm5iZiI6MTc0NzA2MDM1MSwicGF0aCI6Ii8yMTE0NDQ4Mi80MzY2MjMzMjUtZWIxZTljYjMtNzJkYi00ZDA0LTkxZTAtYjY2YTdhZmI1ZjNjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA1MTIlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNTEyVDE0MzIzMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTE3NTlhMmVkMTQwNTRmODQ3NTFlMTE5YzBjOWZkMTEwYzM2Y2EwY2EzMjg0MzljYTU3NDQ1OWQ0ZDYwODE3NTEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.rZCudM8I7EflJWrOJwA8lZUCdRtL6cTxFUhqR0E7jOM" alt="Skeleton"  alt="Skeleton Logo" width="200">
     </a>
     <p>Clean Architecture, design for serverless</p>
-    <br />
     <br />
 </div>
 
@@ -19,22 +18,22 @@
   <img src="https://img.shields.io/badge/DDD-Domain%20Driven%20Design-blueviolet?style=for-the-badge" alt="DDD"/>
 </p>
 
-[![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![codecov](https://codecov.io/gh/nasa/openmct/branch/master/graph/badge.svg?token=7DQIipp3ej)](https://codecov.io/gh/nasa/openmct) [![npm version](https://img.shields.io/npm/v/openmct.svg)](https://www.npmjs.com/package/openmct) ![CodeQL](https://github.com/nasa/openmct/workflows/CodeQL/badge.svg)
+[![npm version](https://img.shields.io/npm/v/openmct.svg)](https://www.npmjs.com/package/openmct) ![CodeQL](https://github.com/nasa/openmct/workflows/CodeQL/badge.svg)
   <a href="https://github.com/facebook/jest"><img src="https://img.shields.io/badge/tested_with-jest-99424f.svg" alt="Tested with Jest"></a>
   <a href="#license"><img src="https://img.shields.io/github/license/sourcerer-io/hall-of-fame.svg?colorB=ff0000"></a>
-<p>
-SkeletonPub Microservices Framework foi desenvolvido para proporcionar uma estrutura base para a implementação de microservices. Utilizando conceitos do Domain-Driven Design, Clean Architecture, padrões SOLID e práticas como código limpo, o projeto visa facilitar e acelerar o desenvolvimento de aplicações escaláveis e de fácil manutenção.
-</p>
+<p></p>
+Skeleton Microservices Framework foi desenvolvido para proporcionar uma estrutura base para a implementação de microservices. Utilizando conceitos do Domain-Driven Design, Clean Architecture, padrões SOLID e práticas como código limpo, o projeto visa facilitar e acelerar o desenvolvimento de aplicações escaláveis e de fácil manutenção.
+
 > [!NOTE]
-> Please visit our [Repository Site](https://github.com/iamelisandromello/skeleton) and [Getting Started Guide](https://github.com/iamelisandromello/skeleton/blob/main/README.md)
+> 
 
-Depois de criar algo incrível com o SkeletonPub, mostre seu trabalho na nossa seção "Show and Tell" do GitHub Discussions. Adoramos ver implementações únicas e maravilhosas do microframework SkeletonPub!
+Depois de criar algo incrível com o Skeleton, mostre seu trabalho na nossa seção "Show and Tell" do GitHub Discussions. Adoramos ver implementações únicas e maravilhosas do microframework Skeleton!
 
-![Skeleton Banner](https://private-user-images.githubusercontent.com/21144482/435825780-6a91069b-5683-43e0-982d-632235f14176.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDY2NjcyMzQsIm5iZiI6MTc0NjY2NjkzNCwicGF0aCI6Ii8yMTE0NDQ4Mi80MzU4MjU3ODAtNmE5MTA2OWItNTY4My00M2UwLTk4MmQtNjMyMjM1ZjE0MTc2LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA1MDglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNTA4VDAxMTUzNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTNmN2Q0MTA4YzZiNzRmMjM4NTZlYWY2NjkwOTk0NjA5MTk4ZGQzZjhhZjJlODI0OTkwNGE0YzBkMjY4YzY4MWYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.ufwcPhxNQIc4PMn8QdlH1LcvqwYzs3yc0xZf7yTf9tQ)
+![Skeleton Banner](https://private-user-images.githubusercontent.com/21144482/435825780-6a91069b-5683-43e0-982d-632235f14176.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDcwNjAyODAsIm5iZiI6MTc0NzA1OTk4MCwicGF0aCI6Ii8yMTE0NDQ4Mi80MzU4MjU3ODAtNmE5MTA2OWItNTY4My00M2UwLTk4MmQtNjMyMjM1ZjE0MTc2LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA1MTIlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNTEyVDE0MjYyMFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWQ4ZmNhZDI4MmE0ZWIyMjE5YjkxODU5YjRkMjY5OGE3MTJiODdhYjJmMGRkZjJiNzUzMzAwMGE0Y2Y3NjFlNWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.zfhN3-OILILXK9skqOtm3_fwbCOGWPDctjXmQnSXMG0)
 
 <div align="center">
   <h1 align="center">
-    SkeletonPub Project
+    Skeleton Project
   </h1>
 </div>
 
@@ -106,9 +105,9 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 Para mais informações, entre em contato através dos canais de comunicação do projeto.
 
 
-### Construindo e executando o SkeletonPub localmente
+### Construindo e executando o Skeleton localmente
 
-Construir e executar o SkeletonPub em seu ambiente de desenvolvimento local é muito fácil. Certifique-se de ter o Git e o Node.js instalados e siga as instruções abaixo. Precisa de mais informações? Confira a página "Como Começar" em nosso site. (Estas instruções pressupõem que você esteja instalando como um usuário não root; desenvolvedores relataram problemas ao executar estas etapas com privilégios de root.)
+Construir e executar o Skeleton em seu ambiente de desenvolvimento local é muito fácil. Certifique-se de ter o Git e o Node.js instalados e siga as instruções abaixo. Precisa de mais informações? Confira a página "Como Começar" em nosso site. (Estas instruções pressupõem que você esteja instalando como um usuário não root; desenvolvedores relataram problemas ao executar estas etapas com privilégios de root.)
 
 1. Clone the source code:
 
@@ -135,9 +134,8 @@ npm start
 ```
 
 > [!IMPORTANT]
-> SkeletonPub is now running, and can be accessed by pointing a web browser at [http://localhost:8080/](http://localhost:8080/)
+> 
 
-SkeletonPub is built using [`npm`](http://npmjs.com/) and [`webpack`](https://webpack.js.org/).
 
 ## 🏗️ Arquitetura
 
@@ -546,6 +544,10 @@ Este projeto segue um conjunto bem definido de convenções de nomenclatura, ado
   - `user` → instância de um usuário  
   - `listAddress` → array de endereços
 
+
+### Consistência Semântica de Termos
+Certos termos são usados ​​em todo projeto Skeleton com significados ou convenções consistentes. Quaisquer desvios dos termos abaixo são problemas e devem ser resolvidos (atualizando este glossário ou alterando o código para refletir o uso correto). Outras documentações para desenvolvedores, especialmente as em linha, podem pressupor a compreensão desses termos.
+
 ---
 ### 🧩 Boas Práticas
 
@@ -703,7 +705,6 @@ export abstract class Controller {
   }
 }
 ```
-
 ## Convenções de Código
 
 1. **Nomenclatura**
@@ -724,26 +725,25 @@ export abstract class Controller {
 
 ### Examples
 
-The clearest examples for developing projects with the SkeletonPub archetype are in the
+The clearest examples for developing projects with the Skeleton archetype are in the
 [tutorials](https://github.com/breathingcode-warkey/patterns-repository) provided in
 our documentation.
 
 > [!NOTE]
-Queremos que o SkeletonPub seja o mais fácil de usar, instalar, executar e desenvolver
+Queremos que o Skeleton seja o mais fácil de usar, instalar, executar e desenvolver
 > possível, e seu feedback nos ajudará a chegar lá!
 > O feedback pode ser fornecido por meio de [Problemas no GitHub](https://github.com/breathingcode-warkey/patterns-repository),
 > [Iniciando uma Discussão no GitHub](https://github.com/breathingcode-warkey),
-> ou enviando um e-mail para [arc-dl-openmct@mail.nasa.gov](mailto:imaelisandromello@gmail.com).
+> ou enviando um e-mail para [imaelisandromello@gmail.com](mailto:imaelisandromello@gmail.com).
 
 ## Bibliotecas
+Este projeto utiliza uma seleção de bibliotecas externas cuidadosamente escolhidas para garantir produtividade, qualidade de código, testes robustos e compatibilidade com o ecossistema TypeScript e Node.js. As dependências cobrem desde ferramentas de linting e formatação, até frameworks de testes, tipagens TypeScript específicas e utilitários para automação e build. Abaixo estão listadas e descritas as principais bibliotecas que compõem a base técnica do projeto.
 
 ### Dependências de Produção
-Certain terms are used throughout SkeletonPub with consistent meanings
-or conventions. Any deviations from the below are issues and should be
-addressed (either by updating this glossary or changing code to reflect
-correct usage.) Other developer documentation, particularly in-line
-documentation, may presume an understanding of these terms.
-| Term                  | Definition                                                                                                                                                                        |
+As dependências de produção são aquelas necessárias para o funcionamento da aplicação em tempo de execução. Elas são carregadas junto com o código da aplicação e fazem parte da lógica essencial do projeto. Estas bibliotecas oferecem funcionalidades como manipulação de arquivos, resolução de padrões glob e outras utilidades fundamentais para o comportamento da aplicação em ambiente real.
+
+
+| Bibliotecas                  | Definição                                                                                                                                                                        |
 |-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | _@aws-sdk/client-s3_  | Cliente oficial da AWS para interagir com o serviço S3 (armazenamento de arquivos e objetos) via código. Usado para upload, download, leitura e exclusão de objetos em buckets S3.|
 | _@aws-sdk/client-sqs_ | Cliente oficial da AWS para interagir com o serviço SQS (filas de mensagens). Permite envio, leitura e remoção de mensagens em filas distribuídas.                                |
@@ -755,12 +755,8 @@ documentation, may presume an understanding of these terms.
 | _pg-promise_          | Biblioteca para PostgreSQL baseada em Promises, com foco em flexibilidade e desempenho. Ajuda na execução de queries SQL de forma segura, organizada e escalável.                 |
 | _validator_           | Biblioteca para validação de strings (emails, URLs, números, etc.). Muito usada para validar inputs antes de processar ou persistir dados.                                        |
 
-### Dependências de Desenvolvimneto
-Certain terms are used throughout Open MCT with consistent meanings
-or conventions. Any deviations from the below are issues and should be
-addressed (either by updating this glossary or changing code to reflect
-correct usage.) Other developer documentation, particularly in-line
-documentation, may presume an understanding of these terms.
+### Dependências de Desenvolvimento
+As dependências de desenvolvimento são utilizadas exclusivamente durante o ciclo de desenvolvimento, testes e build do projeto. Elas incluem ferramentas de linting, formatação, tipagem estática, execução de testes e automação de scripts. Seu uso garante um ambiente mais produtivo, seguro e padronizado para os desenvolvedores, sem impactar a execução em produção.
 | Term                  | Definition                                                                                                                                                                    |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | _@biomejs/biome_      | Ferramenta all-in-one para lint, formatter e análise estática de código TypeScript/JavaScript. Substitui ESLint, Prettier e outras ferramentas com configuração unificada.    |
@@ -838,10 +834,9 @@ de desenvolvimento, build, testes e análise de qualidade de código.
   npm run test
   ```
   
-All tests are located within the `e2e/tests/` directory and are identified by the `*.e2e.spec.js` filename pattern. For more information about the e2e test suite, refer to the [README](./e2e/README.md).
-
+Todos os testes estão localizados no diretório ./tests/ e são identificados pelo padrão de nome de arquivo *.spec.ts. Para mais informações sobre o conjunto de testes e2e, consulte o [README](./README.md).
 
 
 ## Repositórios Relacionados
 
-> [!NOTE] Embora o SkeletonPub funcione como um projeto independente, ele é essencialmente um microframework extensível projetado para ser usado como dependência, com base no conceito de arquitetura como dependência, com plugins e pacotes de propriedade do usuário. Um ótimo exemplo de hospedagem do SkeletonPub em projetos serverless de produção é o WarKey.
+> [!NOTE] Embora o Skeleton funcione como um projeto independente, ele é essencialmente um microframework extensível projetado para ser usado como dependência, com base no conceito de arquitetura como dependência, com plugins e pacotes de propriedade do usuário. Um ótimo exemplo de hospedagem do Skeleton em projetos serverless de produção é o WarKey.
