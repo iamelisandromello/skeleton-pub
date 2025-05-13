@@ -149,15 +149,16 @@ jobs:
           
           export AWS_REGION="${{ env.AWS_REGION }}"
           export PROJECT_NAME="${{ env.PROJECT_NAME }}"
-          export QUEUE_NAME="${PROJECT_NAME}-queue"
-          export ROLE_NAME="${PROJECT_NAME}_execution_role"
-          export LOG_GROUP_NAME="/aws/lambda/${PROJECT_NAME}"
-      
+          export ENVIRONMENT="${{ env.ENVIRONMENT }}"
+          export LAMBDA_NAME="${PROJECT_NAME}-${ENVIRONMENT}"
+          export QUEUE_NAME="${LAMBDA_NAME}-queue"
+          export ROLE_NAME="${LAMBDA_NAME}_execution_role"
+          export LOG_GROUP_NAME="/aws/lambda/${LAMBDA_NAME}"
+
           echo "📦 Importando recursos existentes, se encontrados..."
-      
+
           # --- Importar SQS Queue, se existir ---
           echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
-          
           QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null)
           QUEUE_STATUS=$?
 
@@ -169,19 +170,19 @@ jobs:
           fi
 
           echo "Queue URL: $QUEUE_URL"
-      
+
           # --- Importar bucket S3 (sempre existente e compartilhado) ---
           echo "✅ Bucket S3 é tratado como data source, não requer import."
-      
+
           # --- Importar IAM Role, se existir ---
-            echo "🔍 Verificando existência da IAM Role '$ROLE_NAME'..."
-            if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
-              echo "✅ IAM Role encontrada. Importando..."
-              terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"
-            else
-              echo "❌ IAM Role '$ROLE_NAME' não encontrada. Terraform irá criá-la no apply."
-            fi
-                
+          echo "🔍 Verificando existência da IAM Role '$ROLE_NAME'..."
+          if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
+            echo "✅ IAM Role encontrada. Importando..."
+            terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"
+          else
+            echo "❌ IAM Role '$ROLE_NAME' não encontrada. Terraform irá criá-la no apply."
+          fi
+
           # --- Importar CloudWatch Log Group, se existir ---
           echo "🔍 Verificando existência do CloudWatch Log Group '$LOG_GROUP_NAME'..."
           if aws logs describe-log-groups --log-group-name-prefix "$LOG_GROUP_NAME" --region "$AWS_REGION" | grep "$LOG_GROUP_NAME" &>/dev/null; then
@@ -190,15 +191,16 @@ jobs:
           else
             echo "❌ Log Group '$LOG_GROUP_NAME' não encontrado. Terraform irá criá-lo no apply."
           fi
-      
+
           # --- Importar Lambda Function, se existir ---
-          echo "🔍 Verificando existência da função Lambda '$PROJECT_NAME'..."
-          if aws lambda get-function --function-name "$PROJECT_NAME" --region "$AWS_REGION" &>/dev/null; then
+          echo "🔍 Verificando existência da função Lambda '$LAMBDA_NAME'..."
+          if aws lambda get-function --function-name "$LAMBDA_NAME" --region "$AWS_REGION" &>/dev/null; then
             echo "✅ Função Lambda encontrada. Importando..."
-            terraform import aws_lambda_function.my_lambda_function "$PROJECT_NAME"
+            terraform import aws_lambda_function.my_lambda_function "$LAMBDA_NAME"
           else
-            echo "❌ Função Lambda '$PROJECT_NAME' não encontrada. Terraform irá criá-la no apply."
+            echo "❌ Função Lambda '$LAMBDA_NAME' não encontrada. Terraform irá criá-la no apply."
           fi
+
         continue-on-error: false
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
