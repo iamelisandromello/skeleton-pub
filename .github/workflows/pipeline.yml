@@ -94,7 +94,9 @@ jobs:
       - name: Terraform Init
         run: |
           terraform init
-          terraform workspace select -or-create ${{ env.ENVIRONMENT }}
+          terraform workspace list | grep "${{ env.ENVIRONMENT }}" || terraform workspace new ${{ env.ENVIRONMENT }}
+          terraform workspace select ${{ env.ENVIRONMENT }}
+
         working-directory: terraform
         env:
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
