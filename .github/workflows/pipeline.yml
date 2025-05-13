@@ -104,6 +104,21 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: Validação do Terraform Init
+        run: |
+          if [ ! -d ".terraform" ]; then
+            echo "❌ Terraform init não foi concluído. Abortando."
+            exit 1
+          else
+            echo "✅ Terraform init executado com sucesso!."
+          fi
+        working-directory: terraform
+        env:
+          TF_VAR_project_name: ${{ env.PROJECT_NAME }}
+          TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       # -------------------------------
       # 🧾 GENERATE TFVARS FROM SECRETS
       # -------------------------------
