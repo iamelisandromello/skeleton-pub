@@ -154,6 +154,7 @@ jobs:
           else
             echo "❌ Fila SQS '$QUEUE_NAME' não encontrada. Terraform irá criá-la no apply."
           fi
+          echo "Queue URL: $QUEUE_URL"
       
           # --- Importar bucket S3 (sempre existente e compartilhado) ---
           echo "✅ Bucket S3 é tratado como data source, não requer import."
