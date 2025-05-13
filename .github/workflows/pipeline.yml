@@ -136,7 +136,6 @@ jobs:
       - name: Import existing AWS resources
         run: |
           set -e  # ⛔ Interrompe o script ao primeiro erro
-          cd terraform  # 👈 garante que terraform esteja no diretório correto
           
           export AWS_REGION="${{ env.AWS_REGION }}"
           export PROJECT_NAME="${{ env.PROJECT_NAME }}"
