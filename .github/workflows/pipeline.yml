@@ -148,6 +148,7 @@ jobs:
           # --- Importar SQS Queue, se existir ---
           echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
           QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null)
+          echo "Queue URL ENCONTRADA: $QUEUE_URL"
           if [ -n "$QUEUE_URL" ]; then
             echo "✅ Fila SQS encontrada. Importando..."
             terraform import aws_sqs_queue.my_queue "$QUEUE_URL"
