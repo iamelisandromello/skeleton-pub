@@ -158,14 +158,14 @@ jobs:
           # --- Importar SQS Queue, se existir ---
           echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
           
-          QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>&1)
+          QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null)
           QUEUE_STATUS=$?
 
-          if [ $QUEUE_STATUS -eq 0 ] && [ -n "$QUEUE_URL" ] && [ "$QUEUE_URL" != "None" ]; then
+          if [ $QUEUE_STATUS -eq 0 ] && [[ "$QUEUE_URL" == https* ]]; then
             echo "✅ Fila SQS encontrada. Importando..."
-            terraform import aws_sqs_queue.my_queue "$QUEUE_URL" || echo "⚠️ Falha ao importar a fila, mas o processo continuará."
+            terraform import aws_sqs_queue.my_queue "$QUEUE_URL"
           else
-            echo "❌ Fila SQS '$QUEUE_NAME' não encontrada ou falha ao consultar a AWS. Erro: $QUEUE_URL"
+            echo "❌ Fila SQS '$QUEUE_NAME' não encontrada ou falha ao consultar a AWS."
           fi
 
           echo "Queue URL: $QUEUE_URL"

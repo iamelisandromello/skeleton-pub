@@ -17,9 +17,8 @@ output "lambda_function_name" {
 # ===============================
 # Outputs adicionais para a Fila SQS
 # ===============================
-
 output "sqs_queue_url" {
-  value = aws_sqs_queue.my_queue.id
+  value = aws_sqs_queue.my_queue.url
 }
 
 output "sqs_queue_arn" {
