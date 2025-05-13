@@ -76,7 +76,7 @@ jobs:
             cat global_env_vars.json
             exit 1
           else 
-            echo "✅ Verificando existência da fila SQS '$S3_BUCKET_NAME'..."
+            echo "✅ Utilizando S3 Bucket '$BUCKET_NAME'..."
           fi
         
       - name: Upload Lambda ZIP to S3
@@ -194,7 +194,12 @@ jobs:
       
           if [ "$QUEUE_STATUS" -eq 0 ] && [[ "$QUEUE_URL" == https* ]]; then
             echo "✅ Fila SQS encontrada. Importando para Terraform..."
-            terraform import aws_sqs_queue.my_queue "$QUEUE_URL" || echo "⚠️  Falha no terraform import da SQS. Seguindo com o pipeline."
+            if terraform import aws_sqs_queue.my_queue "$QUEUE_URL"; then
+              echo "✅ Lambda importada com sucesso."
+            else
+              echo "⚠️  Falha ao importar a Lambda. Isso pode causar erro no apply."
+              exit 1
+            fi
           else
             echo "ℹ️ Fila SQS não encontrada. Terraform irá criá-la no apply."
           fi
