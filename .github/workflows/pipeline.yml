@@ -155,21 +155,29 @@ jobs:
           export ROLE_NAME="${LAMBDA_NAME}_execution_role"
           export LOG_GROUP_NAME="/aws/lambda/${LAMBDA_NAME}"
 
-          echo "📦 Importando recursos existentes, se encontrados..."
-
-          # --- Importar SQS Queue, se existir ---
           echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
-          QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null)
-          QUEUE_STATUS=$?
+          set +e  # ⛔ Aciona o script ao primeiro erro
 
-          if [ $QUEUE_STATUS -eq 0 ] && [[ "$QUEUE_URL" == https* ]]; then
-            echo "✅ Fila SQS encontrada. Importando..."
-            terraform import aws_sqs_queue.my_queue "$QUEUE_URL"
+          QUEUE_URL=""
+          QUEUE_STATUS=1
+
+          if QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null); then
+            QUEUE_STATUS=0
           else
-            echo "❌ Fila SQS '$QUEUE_NAME' não encontrada ou falha ao consultar a AWS."
+            echo "⚠️  aws sqs get-queue-url retornou erro. Fila provavelmente não existe."
           fi
 
+          echo "Queue Status: $QUEUE_STATUS"
           echo "Queue URL: $QUEUE_URL"
+
+          if [ "$QUEUE_STATUS" -eq 0 ] && [[ "$QUEUE_URL" == https* ]]; then
+            echo "✅ Fila SQS encontrada. Importando para Terraform..."
+            terraform import aws_sqs_queue.my_queue "$QUEUE_URL" || echo "⚠️  Falha no terraform import da SQS. Seguindo com o pipeline."
+          else
+            echo "ℹ️ Fila SQS não encontrada. Terraform irá criá-la no apply."
+          fi
+
+          set -e  # ⛔ Interrompe o script ao primeiro erro
 
           # --- Importar bucket S3 (sempre existente e compartilhado) ---
           echo "✅ Bucket S3 é tratado como data source, não requer import."
