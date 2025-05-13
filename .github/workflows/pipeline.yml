@@ -181,15 +181,22 @@ jobs:
 
           # --- Importar bucket S3 (sempre existente e compartilhado) ---
           echo "✅ Bucket S3 é tratado como data source, não requer import."
-
+          
+          set -e
           # --- Importar IAM Role, se existir ---
           echo "🔍 Verificando existência da IAM Role '$ROLE_NAME'..."
           if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
-            echo "✅ IAM Role encontrada. Importando..."
-            terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"
+            echo "✅ IAM Role encontrada. Tentando importar para o Terraform..."
+            if terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"; then
+              echo "✅ Importação da IAM Role concluída com sucesso."
+            else
+              echo "⚠️  Falha ao importar a IAM Role. Isso causará erro no terraform apply."
+              exit 1
+            fi
           else
-            echo "❌ IAM Role '$ROLE_NAME' não encontrada. Terraform irá criá-la no apply."
+            echo "ℹ️ IAM Role '$ROLE_NAME' não existe. Terraform irá criá-la."
           fi
+          set +e
 
           # --- Importar CloudWatch Log Group, se existir ---
           echo "🔍 Verificando existência do CloudWatch Log Group '$LOG_GROUP_NAME'..."
