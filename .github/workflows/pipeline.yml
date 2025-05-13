@@ -192,6 +192,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
+          TF_VAR_environment: ${{ env.ENVIRONMENT }} # ← Adicione esta linha
         working-directory: terraform
 
       # -------------------------------
