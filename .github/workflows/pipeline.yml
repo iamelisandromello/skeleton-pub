@@ -136,7 +136,6 @@ jobs:
       - name: Import existing AWS resources
         run: |
           set -e  # ⛔ Interrompe o script ao primeiro erro
-          cd terraform  # 👈 garante que terraform esteja no diretório correto
           
           export AWS_REGION="${{ env.AWS_REGION }}"
           export PROJECT_NAME="${{ env.PROJECT_NAME }}"
@@ -185,7 +184,7 @@ jobs:
           else
             echo "❌ Função Lambda '$PROJECT_NAME' não encontrada. Terraform irá criá-la no apply."
           fi
-        continue-on-error: true
+        continue-on-error: false
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
