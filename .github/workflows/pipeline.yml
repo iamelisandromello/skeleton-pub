@@ -109,9 +109,9 @@ jobs:
       # -------------------------------
       - name: Extrair secrets e gerar arquivos tfvars
         run: |
-          echo '${{ secrets.GLOBAL_ENV_VARS_JSON }}' > terraform/global-env-vars.auto.tfvars.json
-          echo '${{ secrets.ENVIRONMENTS }}' > terraform/environments.auto.tfvars.json      
-
+          printf '{"environments": %s}\n' '${{ secrets.ENVIRONMENTS }}' > terraform/environments.auto.tfvars.json
+          printf '{"global_env_vars": %s}\n' '${{ secrets.GLOBAL_ENV_VARS_JSON }}' > terraform/global-env-vars.auto.tfvars.json
+      
       - name: Verificar acesso ao S3
         run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}
         env:
