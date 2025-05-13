@@ -76,14 +76,16 @@ jobs:
             cat global_env_vars.json
             exit 1
           else 
-            echo "✅ Utilizando S3 Bucket '$BUCKET_NAME'..."
+            echo "ℹ️ Utilizando S3 Bucket '$BUCKET_NAME'..."
           fi
         
       - name: Upload Lambda ZIP to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: aws s3 cp ${{ env.PROJECT_NAME }}.zip s3://${{ env.S3_BUCKET_NAME }}/${{ env.PROJECT_NAME }}.zip
+        run: |
+          aws s3 cp ${{ env.PROJECT_NAME }}.zip s3://${{ env.S3_BUCKET_NAME }}/${{ env.PROJECT_NAME }}.zip
+          echo "📦✅ Pacote zip criado com sucesso e realizado o Upload para S3 Bucket"
       
       # -------------------------------
       # 🛠️ SETUP TERRAFORM
@@ -92,6 +94,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.6
+
       # -------------------------------
       # 📦 TERRAFORM INIT & WORKSPACE
       # -------------------------------
@@ -114,7 +117,7 @@ jobs:
             echo "❌ Terraform init não foi concluído. Abortando."
             exit 1
           else
-            echo "✅ Terraform init executado com sucesso!."
+            echo "♻️ Terraform init executado com sucesso!."
           fi
         working-directory: terraform
         env:
@@ -195,9 +198,9 @@ jobs:
           if [ "$QUEUE_STATUS" -eq 0 ] && [[ "$QUEUE_URL" == https* ]]; then
             echo "✅ Fila SQS encontrada. Importando para Terraform..."
             if terraform import aws_sqs_queue.my_queue "$QUEUE_URL"; then
-              echo "✅ Lambda importada com sucesso."
+              echo "🟢 Fila SQS  importada com sucesso."
             else
-              echo "⚠️  Falha ao importar a Lambda. Isso pode causar erro no apply."
+              echo "⚠️  Falha ao importar a Fila SQS . Isso pode causar erro no apply."
               exit 1
             fi
           else
@@ -206,13 +209,13 @@ jobs:
       
           set -e
       
-          echo "✅ Bucket S3 é tratado como data source, não requer import."
+          echo "🟢 Bucket S3 é tratado como data source, não requer import."
       
           echo "🔍 Verificando existência da IAM Role '$ROLE_NAME'..."
           if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
             echo "✅ IAM Role encontrada. Tentando importar para o Terraform..."
             if terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"; then
-              echo "✅ Importação da IAM Role concluída com sucesso." 
+              echo "🟢 Importação da IAM Role concluída com sucesso." 
             else
               echo "⚠️  Falha ao importar a IAM Role. Isso causará erro no terraform apply."
               exit 1
@@ -229,7 +232,7 @@ jobs:
             else
               echo "➡️ Importando Log Group..."
               if terraform import aws_cloudwatch_log_group.lambda_log_group "$LOG_GROUP_NAME"; then
-                echo "✅ Importação do Log Group concluída com sucesso."
+                echo "🟢 Importação do Log Group concluída com sucesso."
               else
                 echo "⚠️  Falha ao importar o Log Group. Isso causará erro no terraform apply."
                 exit 1
@@ -242,7 +245,12 @@ jobs:
           echo "🔍 Verificando existência da função Lambda '$LAMBDA_NAME'..."
           if aws lambda get-function --function-name "$LAMBDA_NAME" --region "$AWS_REGION" &>/dev/null; then
             echo "✅ Função Lambda encontrada. Importando..."
-            terraform import aws_lambda_function.my_lambda_function "$LAMBDA_NAME"
+            if terraform import aws_lambda_function.my_lambda_function "$LAMBDA_NAME"; then
+              echo "🟢 Importação da LAMBDA concluída com sucesso." 
+            else
+              echo "⚠️  Falha ao importar a LAMBDA. Isso causará erro no terraform apply."
+              exit 1
+            fi
           else
             echo "❌ Função Lambda '$LAMBDA_NAME' não encontrada. Terraform irá criá-la no apply."
           fi
@@ -255,7 +263,6 @@ jobs:
           TF_VAR_environment: ${{ env.ENVIRONMENT }}
         working-directory: terraform
       
-
       # -------------------------------
       # 🔍 VALIDAÇÃO DO TERRAFORM
       # Garante que a configuração está sintaticamente correta
