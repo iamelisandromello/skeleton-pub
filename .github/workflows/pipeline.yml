@@ -180,31 +180,23 @@ jobs:
           export ROLE_NAME="${PROJECT_NAME}${ENV_SUFFIX}_execution_role"
           export LOG_GROUP_NAME="/aws/lambda/${LAMBDA_NAME}"
       
-          echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
           set +e
-      
-          QUEUE_URL=""
-          QUEUE_STATUS=1
-      
+
+          echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
           if QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null); then
             QUEUE_STATUS=0
-          else
-            echo "⚠️  aws sqs get-queue-url retornou erro. Fila provavelmente não existe."
           fi
-      
-          echo "Queue Status: $QUEUE_STATUS"
-          echo "Queue URL: $QUEUE_URL"
       
           if [ "$QUEUE_STATUS" -eq 0 ] && [[ "$QUEUE_URL" == https* ]]; then
             echo "✅ Fila SQS encontrada. Importando para Terraform..."
             if terraform import aws_sqs_queue.my_queue "$QUEUE_URL"; then
               echo "🟢 Fila SQS  importada com sucesso."
             else
-              echo "⚠️  Falha ao importar a Fila SQS . Isso pode causar erro no apply."
+              echo "⚠️  Falha ao importar a Fila SQS . Isso irá causar erro no apply."
               exit 1
             fi
           else
-            echo "ℹ️ Fila SQS não encontrada. Terraform irá criá-la no apply."
+            echo "🛠️ Fila SQS não encontrada. Terraform irá criá-la no apply."
           fi
       
           set -e
@@ -221,7 +213,7 @@ jobs:
               exit 1
             fi
           else
-            echo "ℹ️ IAM Role '$ROLE_NAME' não existe. Terraform irá criá-la."
+            echo "🛠️ IAM Role '$ROLE_NAME' não existe. Terraform irá criá-la."
           fi
       
           echo "🔍 Verificando existência do CloudWatch Log Group '$LOG_GROUP_NAME'..."
@@ -239,7 +231,7 @@ jobs:
               fi
             fi
           else
-            echo "❌ Log Group '$LOG_GROUP_NAME' não encontrado. Terraform irá criá-lo no apply."
+            echo "🛠️ Log Group '$LOG_GROUP_NAME' não encontrado. Terraform irá criá-lo no apply."
           fi
       
           echo "🔍 Verificando existência da função Lambda '$LAMBDA_NAME'..."
@@ -252,7 +244,7 @@ jobs:
               exit 1
             fi
           else
-            echo "❌ Função Lambda '$LAMBDA_NAME' não encontrada. Terraform irá criá-la no apply."
+            echo "🛠️ Função Lambda '$LAMBDA_NAME' não encontrada. Terraform irá criá-la no apply."
           fi
         continue-on-error: false
         env:
