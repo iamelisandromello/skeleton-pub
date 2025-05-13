@@ -76,7 +76,7 @@ jobs:
             cat global_env_vars.json
             exit 1
           else 
-            echo "✅ Usando bucket: $S3_BUCKET_NAME"
+            echo "✅ Verificando existência da fila SQS '$S3_BUCKET_NAME'..."
           fi
         
       - name: Upload Lambda ZIP to S3
@@ -257,7 +257,13 @@ jobs:
       # antes de prosseguir com o plano de execução.
       # -------------------------------
       - name: Terraform Validate
-        run: terraform validate
+        run: |
+          if terraform validate; then
+            echo "✅ Validação do Terraform concluída com sucesso."
+          else
+            echo "❌ Validação do Terraform falhou. Corrija os erros antes de continuar."
+            exit 1
+          fi
         working-directory: terraform
         
       # -------------------------------
