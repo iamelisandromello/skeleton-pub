@@ -51,12 +51,6 @@ jobs:
         run: npm run build
 
       # -------------------------------
-      # ⚙️ SETUP ENVIRONMENT
-      # -------------------------------
-      - name: Setup Environment Variables
-        run: echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-
-      # -------------------------------
       # 📁 PACKAGE LAMBDA FUNCTION
       # -------------------------------
       - name: Create Lambda ZIP with node_modules
@@ -130,6 +124,18 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+
+      - name: Debug ENV
+        run: |
+          echo "PROJECT_NAME=${{ env.PROJECT_NAME }}"
+          echo "S3_BUCKET_NAME=${{ env.S3_BUCKET_NAME }}"
+          echo "ENVIRONMENT=${{ env.ENVIRONMENT }}"
+    
+      - name: Check AWS CLI setup
+        run: |
+          aws sts get-caller-identity
+          aws s3 ls
+
       # -------------------------------
       # 🔄 IMPORT EXISTING RESOURCES
       # -------------------------------
@@ -147,15 +153,13 @@ jobs:
       
           # --- Importar SQS Queue, se existir ---
           echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
-
+          
           QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null)
           echo "Queue URL encontrada (bruta): '$QUEUE_URL'"
 
-          if [ -n "$QUEUE_URL" ] && [ "$QUEUE_URL" != "None" ]; then
+          if [ $? -eq 0 ] && [ -n "$QUEUE_URL" ] && [ "$QUEUE_URL" != "None" ]; then
             echo "✅ Fila SQS encontrada. Importando..."
-            set +e
-            terraform import aws_sqs_queue.my_queue "$QUEUE_URL" || true
-            set -e
+            terraform import aws_sqs_queue.my_queue "$QUEUE_URL" || echo "⚠️ Falha ao importar a fila, mas o processo continuará."
           else
             echo "❌ Fila SQS '$QUEUE_NAME' não encontrada. Terraform irá criá-la no apply."
           fi
