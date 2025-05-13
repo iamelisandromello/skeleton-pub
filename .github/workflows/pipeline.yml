@@ -145,45 +145,51 @@ jobs:
       # -------------------------------
       - name: Import existing AWS resources
         run: |
-          set -e  # ⛔ Interrompe o script ao primeiro erro
-          
+          set -e
+      
           export AWS_REGION="${{ env.AWS_REGION }}"
           export PROJECT_NAME="${{ env.PROJECT_NAME }}"
           export ENVIRONMENT="${{ env.ENVIRONMENT }}"
-          export LAMBDA_NAME="${PROJECT_NAME}-${ENVIRONMENT}"
+      
+          # Definir sufixo com base no environment
+          if [ "$ENVIRONMENT" = "prod" ]; then
+            export LAMBDA_NAME="${PROJECT_NAME}"
+            export ENV_SUFFIX=""
+          else
+            export LAMBDA_NAME="${PROJECT_NAME}-${ENVIRONMENT}"
+            export ENV_SUFFIX="-${ENVIRONMENT}"
+          fi
+      
           export QUEUE_NAME="${LAMBDA_NAME}-queue"
-          export ROLE_NAME="${LAMBDA_NAME}_execution_role"
+          export ROLE_NAME="${PROJECT_NAME}${ENV_SUFFIX}_execution_role"
           export LOG_GROUP_NAME="/aws/lambda/${LAMBDA_NAME}"
-
+      
           echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
-          set +e  # ⛔ Aciona o script ao primeiro erro
-
+          set +e
+      
           QUEUE_URL=""
           QUEUE_STATUS=1
-
+      
           if QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null); then
             QUEUE_STATUS=0
           else
             echo "⚠️  aws sqs get-queue-url retornou erro. Fila provavelmente não existe."
           fi
-
+      
           echo "Queue Status: $QUEUE_STATUS"
           echo "Queue URL: $QUEUE_URL"
-
+      
           if [ "$QUEUE_STATUS" -eq 0 ] && [[ "$QUEUE_URL" == https* ]]; then
             echo "✅ Fila SQS encontrada. Importando para Terraform..."
             terraform import aws_sqs_queue.my_queue "$QUEUE_URL" || echo "⚠️  Falha no terraform import da SQS. Seguindo com o pipeline."
           else
             echo "ℹ️ Fila SQS não encontrada. Terraform irá criá-la no apply."
           fi
-
-          set -e  # ⛔ Interrompe o script ao primeiro erro
-
-          # --- Importar bucket S3 (sempre existente e compartilhado) ---
-          echo "✅ Bucket S3 é tratado como data source, não requer import."
-          
+      
           set -e
-          # --- Importar IAM Role, se existir ---
+      
+          echo "✅ Bucket S3 é tratado como data source, não requer import."
+      
           echo "🔍 Verificando existência da IAM Role '$ROLE_NAME'..."
           if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
             echo "✅ IAM Role encontrada. Tentando importar para o Terraform..."
@@ -196,9 +202,7 @@ jobs:
           else
             echo "ℹ️ IAM Role '$ROLE_NAME' não existe. Terraform irá criá-la."
           fi
-          set +e
-
-          # --- Importar CloudWatch Log Group, se existir ---
+      
           echo "🔍 Verificando existência do CloudWatch Log Group '$LOG_GROUP_NAME'..."
           if aws logs describe-log-groups --log-group-name-prefix "$LOG_GROUP_NAME" --region "$AWS_REGION" | grep "$LOG_GROUP_NAME" &>/dev/null; then
             echo "✅ Log Group encontrado. Verificando se já está no state do Terraform..."
@@ -216,8 +220,7 @@ jobs:
           else
             echo "❌ Log Group '$LOG_GROUP_NAME' não encontrado. Terraform irá criá-lo no apply."
           fi
-
-          # --- Importar Lambda Function, se existir ---
+      
           echo "🔍 Verificando existência da função Lambda '$LAMBDA_NAME'..."
           if aws lambda get-function --function-name "$LAMBDA_NAME" --region "$AWS_REGION" &>/dev/null; then
             echo "✅ Função Lambda encontrada. Importando..."
@@ -225,15 +228,15 @@ jobs:
           else
             echo "❌ Função Lambda '$LAMBDA_NAME' não encontrada. Terraform irá criá-la no apply."
           fi
-
         continue-on-error: false
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
           TF_VAR_project_name: ${{ env.PROJECT_NAME }}
-          TF_VAR_environment: ${{ env.ENVIRONMENT }} # ← Adicione esta linha
+          TF_VAR_environment: ${{ env.ENVIRONMENT }}
         working-directory: terraform
+      
 
       # -------------------------------
       # 🔍 VALIDAÇÃO DO TERRAFORM
