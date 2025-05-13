@@ -70,10 +70,14 @@ jobs:
           echo '${{ secrets.GLOBAL_ENV_VARS_JSON }}' > global_env_vars.json
           BUCKET_NAME=$(jq -r '.S3_BUCKET_NAME' global_env_vars.json)
           echo "S3_BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
-      
-      - name: Debug S3 Bucket Name
-        run: |
-          echo "Usando bucket: $S3_BUCKET_NAME"
+
+          if [ -z "$BUCKET_NAME" ] || [ "$BUCKET_NAME" = "null" ]; then
+            echo "❌ Falha ao extrair o nome do bucket do JSON. Verifique o conteúdo de 'GLOBAL_ENV_VARS_JSON'."
+            cat global_env_vars.json
+            exit 1
+          else 
+            echo "✅ Usando bucket: $S3_BUCKET_NAME"
+          fi
         
       - name: Upload Lambda ZIP to S3
         env:
