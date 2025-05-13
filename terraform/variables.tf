@@ -6,6 +6,11 @@ variable "project_name" {
   description = "Name of the project derived from GitHub Repository name"
   type        = string
 }
+
+variable "environment" {
+  description = "Nome do ambiente (ex: dev, prod, preview)"
+  type        = string
+}
   
 # =========================
 # Variáveis de ambiente da Lambda
