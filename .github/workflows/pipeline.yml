@@ -188,7 +188,7 @@ jobs:
           if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
             echo "✅ IAM Role encontrada. Tentando importar para o Terraform..."
             if terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"; then
-              echo "✅ Importação da IAM Role concluída com sucesso."
+              echo "✅ Importação da IAM Role concluída com sucesso." 
             else
               echo "⚠️  Falha ao importar a IAM Role. Isso causará erro no terraform apply."
               exit 1
@@ -201,8 +201,18 @@ jobs:
           # --- Importar CloudWatch Log Group, se existir ---
           echo "🔍 Verificando existência do CloudWatch Log Group '$LOG_GROUP_NAME'..."
           if aws logs describe-log-groups --log-group-name-prefix "$LOG_GROUP_NAME" --region "$AWS_REGION" | grep "$LOG_GROUP_NAME" &>/dev/null; then
-            echo "✅ Log Group encontrado. Importando..."
-            terraform import aws_cloudwatch_log_group.lambda_log_group "$LOG_GROUP_NAME"
+            echo "✅ Log Group encontrado. Verificando se já está no state do Terraform..."
+            if terraform state list | grep aws_cloudwatch_log_group.lambda_log_group >/dev/null; then
+              echo "ℹ️ Log Group já está no state do Terraform. Importação não é necessária."
+            else
+              echo "➡️ Importando Log Group..."
+              if terraform import aws_cloudwatch_log_group.lambda_log_group "$LOG_GROUP_NAME"; then
+                echo "✅ Importação do Log Group concluída com sucesso."
+              else
+                echo "⚠️  Falha ao importar o Log Group. Isso causará erro no terraform apply."
+                exit 1
+              fi
+            fi
           else
             echo "❌ Log Group '$LOG_GROUP_NAME' não encontrado. Terraform irá criá-lo no apply."
           fi
