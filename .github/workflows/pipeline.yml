@@ -70,10 +70,6 @@ jobs:
           echo '${{ secrets.GLOBAL_ENV_VARS_JSON }}' > global_env_vars.json
           BUCKET_NAME=$(jq -r '.S3_BUCKET_NAME' global_env_vars.json)
           echo "S3_BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
-
-      - name: Verificar variável S3_BUCKET_NAME
-        run: |
-          echo "Verificação: S3_BUCKET_NAME=${{ env.S3_BUCKET_NAME }}"
       
       - name: Debug S3 Bucket Name
         run: |
