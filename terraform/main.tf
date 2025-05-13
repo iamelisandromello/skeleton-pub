@@ -34,6 +34,12 @@ resource "aws_iam_role" "lambda_execution_role" {
       }
     ]
   })
+  
+  lifecycle {
+    prevent_destroy = true
+    create_before_destroy = false
+    ignore_changes = [assume_role_policy] # ← evita pequenos conflitos na política
+  }
 }
 
 # Política de logs para CloudWatch
@@ -63,6 +69,11 @@ resource "aws_iam_role_policy" "lambda_logging_policy" {
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name              = local.log_group_name
   retention_in_days = 14
+
+  lifecycle {
+    prevent_destroy = true
+    create_before_destroy = false
+  }
 }
 
 # =======================================
