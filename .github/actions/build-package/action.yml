@@ -1,0 +1,36 @@
+name: Build and Package Lambda
+description: Instala dependências, compila o TypeScript e empacota a Lambda com node_modules
+
+inputs:
+  project_name:
+    description: Nome do projeto (usado para nomear o arquivo zip da Lambda)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # -------------------------------
+    # 📦 DEPENDENCIES & BUILD
+    # -------------------------------
+    - name: Install dependencies
+      shell: bash
+      run: npm install
+
+    - name: Build TypeScript
+      shell: bash
+      run: npm run build
+
+    # -------------------------------
+    # 📁 PACKAGE LAMBDA FUNCTION
+    # -------------------------------
+    - name: Create Lambda ZIP with node_modules
+      shell: bash
+      run: |
+        mkdir -p lambda-package
+        cp -r dist/* lambda-package/
+        cp -r node_modules lambda-package/
+        cp package.json lambda-package/
+        cd lambda-package
+        zip -r ../${{ inputs.project_name }}.zip .
+
+        echo "✅ Lambda empacotada como '${{ inputs.project_name }}.zip'"

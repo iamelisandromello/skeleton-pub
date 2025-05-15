@@ -1,0 +1,46 @@
+name: Terraform Plan and Apply
+description: Executa o Terraform plan e apply com variáveis customizadas e autenticação AWS.
+
+inputs:
+  PROJECT_NAME:
+    description: Nome do projeto para o TF_VAR
+    required: true
+  S3_BUCKET_NAME:
+    description: Nome do bucket S3 compartilhado
+    required: true
+  ENVIRONMENT:
+    description: Ambiente de execução (ex: dev, staging, prod)
+    required: true
+  AWS_ACCESS_KEY_ID:
+    description: Chave de acesso AWS
+    required: true
+  AWS_SECRET_ACCESS_KEY:
+    description: Chave secreta AWS
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Terraform Plan
+      shell: bash
+      working-directory: terraform
+      env:
+        TF_VAR_project_name: ${{ inputs.PROJECT_NAME }}
+        TF_VAR_s3_bucket_name: ${{ inputs.S3_BUCKET_NAME }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        echo "📦 Executando Terraform Plan..."
+        terraform plan -input=false -var "environment=${{ inputs.ENVIRONMENT }}"
+
+    - name: Terraform Apply
+      shell: bash
+      working-directory: terraform
+      env:
+        TF_VAR_project_name: ${{ inputs.PROJECT_NAME }}
+        TF_VAR_s3_bucket_name: ${{ inputs.S3_BUCKET_NAME }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        echo "🚀 Executando Terraform Apply..."
+        terraform apply -auto-approve -var "environment=${{ inputs.ENVIRONMENT }}"

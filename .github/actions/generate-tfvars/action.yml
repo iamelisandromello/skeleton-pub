@@ -1,0 +1,65 @@
+name: Generate tfvars and Validate AWS CLI
+description: Extrai segredos do GitHub Secrets e gera arquivos tfvars para o Terraform. Valida acesso à AWS.
+
+inputs:
+  environments:
+    description: JSON com ambientes
+    required: true
+  global_env_vars_json:
+    description: JSON com variáveis globais
+    required: true
+  s3_bucket_name:
+    description: Nome do bucket S3
+    required: true
+  aws_access_key_id:
+    description: AWS Access Key ID
+    required: true
+  aws_secret_access_key:
+    description: AWS Secret Access Key
+    required: true
+  aws_region:
+    description: Região da AWS
+    required: false
+    default: us-east-1
+  project_name:
+    description: Nome do projeto
+    required: true
+  environment:
+    description: Nome do ambiente (dev, prod, etc)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Gerar arquivos tfvars
+    # -------------------------------
+    # 🧾 GENERATE TFVARS FROM SECRETS
+    # -------------------------------      
+      shell: bash
+      run: |
+        printf '{"environments": %s}\n' '${{ inputs.environments }}' > terraform/environments.auto.tfvars.json
+        printf '{"global_env_vars": %s}\n' '${{ inputs.global_env_vars_json }}' > terraform/global-env-vars.auto.tfvars.json
+
+    - name: Verificar acesso ao S3
+      shell: bash
+      run: aws s3 ls s3://${{ inputs.s3_bucket_name }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+
+    - name: Debug ENV
+      shell: bash
+      run: |
+        echo "PROJECT_NAME=${{ inputs.project_name }}"
+        echo "S3_BUCKET_NAME=${{ inputs.s3_bucket_name }}"
+        echo "ENVIRONMENT=${{ inputs.environment }}"
+
+    - name: Check AWS CLI setup
+      shell: bash
+      run: |
+        aws sts get-caller-identity
+        aws s3 ls
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+        AWS_REGION: ${{ inputs.aws_region }}

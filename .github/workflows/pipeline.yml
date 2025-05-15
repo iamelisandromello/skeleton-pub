@@ -7,286 +7,87 @@ on:
       - develop
       - feature/**
       - hotfix/**
+  workflow_dispatch:
+
+env: # Variáveis globais disponíveis para todos os jobs
+  AWS_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: us-east-1
-
+    
     steps:
       # -------------------------------
-      # 🧾 CHECKOUT & NODE SETUP
+      # 🧾 CHECKOUT
       # -------------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # -------------------------------
+      # 🧾 Steps
+      # -------------------------------
+      - name: Setup Node.js and Env Vars
+        uses: ./.github/actions/setup-node
         with:
-          node-version: 20
+          node_version: '20'
 
-      # -------------------------------
-      # ⚙️ SETUP ENVIRONMENT
-      # -------------------------------
-      - name: Setup Environment Variables
-        run: |
-          echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-      
-          if [[ "${{ github.base_ref }}" == "main" ]]; then
-            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-          elif [[ "${{ github.base_ref }}" == "develop" ]]; then
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-          else
-            echo "ENVIRONMENT=preview" >> $GITHUB_ENV
-          fi
-
-      # -------------------------------
-      # 📦 DEPENDENCIES & BUILD
-      # -------------------------------
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build TypeScript
-        run: npm run build
-
-      # -------------------------------
-      # 📁 PACKAGE LAMBDA FUNCTION
-      # -------------------------------
-      - name: Create Lambda ZIP with node_modules
-        run: |
-          mkdir -p lambda-package
-          cp -r dist/* lambda-package/
-          cp -r node_modules lambda-package/
-          cp package.json lambda-package/
-          cd lambda-package
-          zip -r ../${{ env.PROJECT_NAME }}.zip .
-
-      # -------------------------------
-      # ☁️ UPLOAD PACKAGE TO S3
-      # -------------------------------
-      - name: Extrair nome do bucket S3 das env vars
-        run: |
-          echo '${{ secrets.GLOBAL_ENV_VARS_JSON }}' > global_env_vars.json
-          BUCKET_NAME=$(jq -r '.S3_BUCKET_NAME' global_env_vars.json)
-          echo "S3_BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
-
-          if [ -z "$BUCKET_NAME" ] || [ "$BUCKET_NAME" = "null" ]; then
-            echo "❌ Falha ao extrair o nome do bucket do JSON. Verifique o conteúdo de 'GLOBAL_ENV_VARS_JSON'."
-            cat global_env_vars.json
-            exit 1
-          else 
-            echo "ℹ️ Utilizando S3 Bucket '$BUCKET_NAME'..."
-          fi
+      - name: Install & Build
+        uses: ./.github/actions/build-package
+        with:
+          project_name: ${{ env.PROJECT_NAME }}
         
-      - name: Upload Lambda ZIP to S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws s3 cp ${{ env.PROJECT_NAME }}.zip s3://${{ env.S3_BUCKET_NAME }}/${{ env.PROJECT_NAME }}.zip
-          echo "📦✅ Pacote zip criado com sucesso e realizado o Upload para S3 Bucket"
-      
-      # -------------------------------
-      # 🛠️ SETUP TERRAFORM
-      # -------------------------------
+      - name: Upload Lambda to S3
+        uses: ./.github/actions/upload-to-s3
+        with:
+          global_env_vars_json: ${{ secrets.GLOBAL_ENV_VARS_JSON }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          project_name: ${{ env.PROJECT_NAME }}
+
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: ./.github/actions/setup-terraform
         with:
-          terraform_version: 1.5.6
+          terraform_version: '1.5.6'
+          environment: ${{ env.ENVIRONMENT }}
+          project_name: ${{ env.PROJECT_NAME }}
+          s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # -------------------------------
-      # 📦 TERRAFORM INIT & WORKSPACE
-      # -------------------------------
-      - name: Terraform Init
-        run: |
-          terraform init
-          terraform workspace list | grep "${{ env.ENVIRONMENT }}" || terraform workspace new ${{ env.ENVIRONMENT }}
-          terraform workspace select ${{ env.ENVIRONMENT }}
-
-        working-directory: terraform
-        env:
-          TF_VAR_project_name: ${{ env.PROJECT_NAME }}
-          TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-      - name: Validação do Terraform Init
-        run: |
-          if [ ! -d ".terraform" ]; then
-            echo "❌ Terraform init não foi concluído. Abortando."
-            exit 1
-          else
-            echo "♻️ Terraform init executado com sucesso!."
-          fi
-        working-directory: terraform
-        env:
-          TF_VAR_project_name: ${{ env.PROJECT_NAME }}
-          TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-      # -------------------------------
-      # 🧾 GENERATE TFVARS FROM SECRETS
-      # -------------------------------
-      - name: Extrair secrets e gerar arquivos tfvars
-        run: |
-          printf '{"environments": %s}\n' '${{ secrets.ENVIRONMENTS }}' > terraform/environments.auto.tfvars.json
-          printf '{"global_env_vars": %s}\n' '${{ secrets.GLOBAL_ENV_VARS_JSON }}' > terraform/global-env-vars.auto.tfvars.json
-      
-      - name: Verificar acesso ao S3
-        run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-
-      - name: Debug ENV
-        run: |
-          echo "PROJECT_NAME=${{ env.PROJECT_NAME }}"
-          echo "S3_BUCKET_NAME=${{ env.S3_BUCKET_NAME }}"
-          echo "ENVIRONMENT=${{ env.ENVIRONMENT }}"
-    
-      - name: Check AWS CLI setup
-        run: |
-          aws sts get-caller-identity
-          aws s3 ls
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ env.AWS_REGION }}
-
-      # -------------------------------
-      # 🔄 IMPORT EXISTING RESOURCES
-      # -------------------------------
-      - name: Import existing AWS resources
-        run: |
-          set -e
-      
-          export AWS_REGION="${{ env.AWS_REGION }}"
-          export PROJECT_NAME="${{ env.PROJECT_NAME }}"
-          export ENVIRONMENT="${{ env.ENVIRONMENT }}"
-      
-          # Definir sufixo com base no environment
-          if [ "$ENVIRONMENT" = "prod" ]; then
-            export LAMBDA_NAME="${PROJECT_NAME}"
-            export ENV_SUFFIX=""
-          else
-            export LAMBDA_NAME="${PROJECT_NAME}-${ENVIRONMENT}"
-            export ENV_SUFFIX="-${ENVIRONMENT}"
-          fi
-      
-          export QUEUE_NAME="${LAMBDA_NAME}-queue"
-          export ROLE_NAME="${PROJECT_NAME}${ENV_SUFFIX}_execution_role"
-          export LOG_GROUP_NAME="/aws/lambda/${LAMBDA_NAME}"
-      
-          set +e
-
-          echo "🔍 Verificando existência da fila SQS '$QUEUE_NAME'..."
-          if QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null); then
-            QUEUE_STATUS=0
-          fi
-      
-          if [ "$QUEUE_STATUS" -eq 0 ] && [[ "$QUEUE_URL" == https* ]]; then
-            echo "✅ Fila SQS encontrada. Importando para Terraform..."
-            if terraform import aws_sqs_queue.my_queue "$QUEUE_URL"; then
-              echo "🟢 Fila SQS  importada com sucesso."
-            else
-              echo "⚠️  Falha ao importar a Fila SQS . Isso irá causar erro no apply."
-              exit 1
-            fi
-          else
-            echo "🛠️ Fila SQS não encontrada. Terraform irá criá-la no apply."
-          fi
-      
-          set -e
-      
-          echo "🟢 Bucket S3 é tratado como data source, não requer import."
-      
-          echo "🔍 Verificando existência da IAM Role '$ROLE_NAME'..."
-          if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
-            echo "✅ IAM Role encontrada. Tentando importar para o Terraform..."
-            if terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"; then
-              echo "🟢 Importação da IAM Role concluída com sucesso." 
-            else
-              echo "⚠️  Falha ao importar a IAM Role. Isso causará erro no terraform apply."
-              exit 1
-            fi
-          else
-            echo "🛠️ IAM Role '$ROLE_NAME' não existe. Terraform irá criá-la."
-          fi
-      
-          echo "🔍 Verificando existência do CloudWatch Log Group '$LOG_GROUP_NAME'..."
-          if aws logs describe-log-groups --log-group-name-prefix "$LOG_GROUP_NAME" --region "$AWS_REGION" | grep "$LOG_GROUP_NAME" &>/dev/null; then
-            echo "✅ Log Group encontrado. Verificando se já está no state do Terraform..."
-            if terraform state list | grep aws_cloudwatch_log_group.lambda_log_group >/dev/null; then
-              echo "ℹ️ Log Group já está no state do Terraform. Importação não é necessária."
-            else
-              echo "➡️ Importando Log Group..."
-              if terraform import aws_cloudwatch_log_group.lambda_log_group "$LOG_GROUP_NAME"; then
-                echo "🟢 Importação do Log Group concluída com sucesso."
-              else
-                echo "⚠️  Falha ao importar o Log Group. Isso causará erro no terraform apply."
-                exit 1
-              fi
-            fi
-          else
-            echo "🛠️ Log Group '$LOG_GROUP_NAME' não encontrado. Terraform irá criá-lo no apply."
-          fi
-      
-          echo "🔍 Verificando existência da função Lambda '$LAMBDA_NAME'..."
-          if aws lambda get-function --function-name "$LAMBDA_NAME" --region "$AWS_REGION" &>/dev/null; then
-            echo "✅ Função Lambda encontrada. Importando..."
-            if terraform import aws_lambda_function.my_lambda_function "$LAMBDA_NAME"; then
-              echo "🟢 Importação da LAMBDA concluída com sucesso." 
-            else
-              echo "⚠️  Falha ao importar a LAMBDA. Isso causará erro no terraform apply."
-              exit 1
-            fi
-          else
-            echo "🛠️ Função Lambda '$LAMBDA_NAME' não encontrada. Terraform irá criá-la no apply."
-          fi
-        continue-on-error: false
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
-          TF_VAR_project_name: ${{ env.PROJECT_NAME }}
-          TF_VAR_environment: ${{ env.ENVIRONMENT }}
-        working-directory: terraform
-      
-      # -------------------------------
-      # 🔍 VALIDAÇÃO DO TERRAFORM
-      # Garante que a configuração está sintaticamente correta
-      # antes de prosseguir com o plano de execução.
-      # -------------------------------
-      - name: Terraform Validate
-        run: |
-          if terraform validate; then
-            echo "✅ Validação do Terraform concluída com sucesso."
-          else
-            echo "❌ Validação do Terraform falhou. Corrija os erros antes de continuar."
-            exit 1
-          fi
-        working-directory: terraform
+      - name: Generate tfvars
+        uses: ./.github/actions/generate-tfvars
+        with:
+          environments: ${{ secrets.ENVIRONMENTS }}
+          global_env_vars_json: ${{ secrets.GLOBAL_ENV_VARS_JSON }}
+          s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ env.AWS_REGION }}
+          project_name: ${{ env.PROJECT_NAME }}
+          environment: ${{ env.ENVIRONMENT }}
         
-      # -------------------------------
-      # 🧪 TERRAFORM PLAN & APPLY
-      # -------------------------------
-      - name: Terraform Plan
-        run: terraform plan -input=false -var "environment=${{ env.ENVIRONMENT }}"
-        working-directory: terraform
-        env:
-          TF_VAR_project_name: ${{ env.PROJECT_NAME }}
-          TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Importar recursos existentes
+        uses: ./.github/actions/import-resources
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ env.AWS_REGION }}
+          project_name: ${{ env.PROJECT_NAME }}
+          environment: ${{ env.ENVIRONMENT }}
+        
+      - name: Validar Terraform
+        uses: ./.github/actions/validate-terraform
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -var "environment=${{ env.ENVIRONMENT }}"
-        working-directory: terraform
-        env:
-          TF_VAR_project_name: ${{ env.PROJECT_NAME }}
-          TF_VAR_s3_bucket_name: ${{ env.S3_BUCKET_NAME }}
+      - name: Terraform Plan and Apply
+        uses: ./.github/actions/plan-apply-terraform
+        with:
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          S3_BUCKET_NAME: ${{ env.S3_BUCKET_NAME }}
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      

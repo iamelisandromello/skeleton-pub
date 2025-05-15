@@ -1,0 +1,31 @@
+name: Setup Node and Environment
+description: Configura o Node.js e define variáveis globais de ambiente
+
+inputs:
+  node_version:
+    description: Versão do Node.js a ser usada
+    required: false
+    default: '20'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js ${{ inputs.node_version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node_version }}
+
+    - name: Setup Environment Variables
+      shell: bash
+      run: |
+        echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+
+        if [[ "${{ github.base_ref }}" == "main" ]]; then
+          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+        elif [[ "${{ github.base_ref }}" == "develop" ]]; then
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+        else
+          echo "ENVIRONMENT=preview" >> $GITHUB_ENV
+        fi
+
+        echo "📦 Ambiente configurado: PROJECT_NAME=${GITHUB_REPOSITORY#*/}, ENVIRONMENT=$ENVIRONMENT"
