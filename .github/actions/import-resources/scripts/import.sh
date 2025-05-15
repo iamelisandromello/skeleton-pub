@@ -7,13 +7,21 @@ echo "PROJECT_NAME=${PROJECT_NAME}"
 echo "AWS_REGION=${AWS_REGION}"
 echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:0:4}********"
 
-# Navegar até o diretório terraform na raiz do repositório
+# ✅ Exporta variáveis como TF_VAR para que o terraform import funcione
+export TF_VAR_environment="$ENVIRONMENT"
+export TF_VAR_project_name="$PROJECT_NAME"
+export TF_VAR_s3_bucket_name="${PROJECT_NAME}-${ENVIRONMENT}-artifacts"
+
+echo "📦 TF_VARs disponíveis para o Terraform:"
+env | grep TF_VAR_
+
+# 👉 Navega até o diretório terraform na raiz do repositório
 cd "$GITHUB_WORKSPACE/terraform" || {
   echo "❌ Diretório terraform/ não encontrado em $GITHUB_WORKSPACE"
   exit 1
 }
 
-# Determinar nomes com base no ambiente
+# 🔄 Construção dinâmica dos nomes com base no ambiente
 if [ "$ENVIRONMENT" = "prod" ]; then
   LAMBDA_NAME="${PROJECT_NAME}"
   ENV_SUFFIX=""
@@ -28,6 +36,7 @@ LOG_GROUP_NAME="/aws/lambda/${LAMBDA_NAME}"
 
 set +e
 
+# ✅ Importa SQS se existir
 echo "🔍 Verificando SQS '$QUEUE_NAME'..."
 if QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null); then
   terraform import aws_sqs_queue.my_queue "$QUEUE_URL" && echo "🟢 SQS importada com sucesso." || {
@@ -39,6 +48,7 @@ fi
 
 echo "🟢 Bucket S3 tratado como data source."
 
+# ✅ Importa IAM Role se existir
 echo "🔍 Verificando IAM Role '$ROLE_NAME'..."
 if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
   terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME" && echo "🟢 IAM Role importada com sucesso." || {
@@ -48,6 +58,7 @@ else
   echo "🛠️ IAM Role não encontrada. Terraform irá criá-la."
 fi
 
+# ✅ Importa CloudWatch Log Group se existir
 echo "🔍 Verificando Log Group '$LOG_GROUP_NAME'..."
 if aws logs describe-log-groups --log-group-name-prefix "$LOG_GROUP_NAME" --region "$AWS_REGION" | grep "$LOG_GROUP_NAME" &>/dev/null; then
   terraform state list | grep aws_cloudwatch_log_group.lambda_log_group >/dev/null && \
@@ -60,6 +71,7 @@ else
   echo "🛠️ Log Group não encontrado. Terraform irá criá-lo."
 fi
 
+# ✅ Importa Lambda Function se existir
 echo "🔍 Verificando Lambda '$LAMBDA_NAME'..."
 if aws lambda get-function --function-name "$LAMBDA_NAME" --region "$AWS_REGION" &>/dev/null; then
   terraform import aws_lambda_function.my_lambda_function "$LAMBDA_NAME" && echo "🟢 Lambda importada com sucesso." || {
