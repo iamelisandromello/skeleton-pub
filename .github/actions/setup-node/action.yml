@@ -1,9 +1,9 @@
 name: Setup Node and Environment
-description: Configura o Node.js e define variáveis globais de ambiente
+description: "Configura o Node.js e define variáveis globais de ambiente"
 
 inputs:
   node_version:
-    description: Versão do Node.js a ser usada
+    description: "Versão do Node.js a ser usada"
     required: false
     default: '20'
 

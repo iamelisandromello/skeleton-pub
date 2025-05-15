@@ -1,5 +1,5 @@
 name: Generate tfvars and Validate AWS CLI
-description: Extrai segredos do GitHub Secrets e gera arquivos tfvars para o Terraform. Valida acesso à AWS.
+description: "Extrai segredos do GitHub Secrets e gera arquivos tfvars para o Terraform. Valida acesso à AWS.""
 
 inputs:
   environments:
