@@ -34,7 +34,15 @@ runs:
         PROJECT_NAME: ${{ inputs.project_name }}
         ENVIRONMENT: ${{ inputs.environment }}
       run: |
+        echo "🔧 DEBUG VARIÁVEIS DE AMBIENTE"
+        echo "ENVIRONMENT=$ENVIRONMENT"
+        echo "PROJECT_NAME=$PROJECT_NAME"
+        echo "AWS_REGION=$AWS_REGION"
+        echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:0:4}********"
         set -e
+        set -ex
+        echo "📁 Verificando diretório de trabalho:"
+        ls -la terraform
 
         # Definir nomes com base no ambiente
         if [ "$ENVIRONMENT" = "prod" ]; then
