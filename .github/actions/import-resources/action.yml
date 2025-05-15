@@ -23,93 +23,15 @@ runs:
   steps:
     # -------------------------------
     # 🔄 IMPORT EXISTING RESOURCES
-    # -------------------------------    
+    # -------------------------------  
     - name: Importar recursos existentes
       shell: bash
-      working-directory: terraform
+      run: |
+        bash "${{ github.action_path }}/scripts/import.sh"
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
         AWS_REGION: ${{ inputs.aws_region }}
         PROJECT_NAME: ${{ inputs.project_name }}
         ENVIRONMENT: ${{ inputs.environment }}
-      run: |
-        echo "🔧 DEBUG VARIÁVEIS DE AMBIENTE"
-        echo "ENVIRONMENT=$ENVIRONMENT"
-        echo "PROJECT_NAME=$PROJECT_NAME"
-        echo "AWS_REGION=$AWS_REGION"
-        echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:0:4}********"
-        set -e
-        set -ex
-        echo "📁 Verificando diretório de trabalho:"
-        ls -la terraform
-
-        # Definir nomes com base no ambiente
-        if [ "$ENVIRONMENT" = "prod" ]; then
-          LAMBDA_NAME="${PROJECT_NAME}"
-          ENV_SUFFIX=""
-        else
-          LAMBDA_NAME="${PROJECT_NAME}-${ENVIRONMENT}"
-          ENV_SUFFIX="-${ENVIRONMENT}"
-        fi
-
-        QUEUE_NAME="${LAMBDA_NAME}-queue"
-        ROLE_NAME="${PROJECT_NAME}${ENV_SUFFIX}_execution_role"
-        LOG_GROUP_NAME="/aws/lambda/${LAMBDA_NAME}"
-
-        set +e
-
-        echo "🔍 Verificando SQS '$QUEUE_NAME'..."
-        if QUEUE_URL=$(aws sqs get-queue-url --queue-name "$QUEUE_NAME" --region "$AWS_REGION" --query 'QueueUrl' --output text 2>/dev/null); then
-          if terraform import aws_sqs_queue.my_queue "$QUEUE_URL"; then
-            echo "🟢 SQS importada com sucesso."
-          else
-            echo "⚠️ Falha ao importar a SQS."
-            exit 1
-          fi
-        else
-          echo "🛠️ SQS '$QUEUE_NAME' não encontrada. Terraform irá criá-la."
-        fi
-
-        echo "🟢 Bucket S3 tratado como data source."
-
-        echo "🔍 Verificando IAM Role '$ROLE_NAME'..."
-        if aws iam get-role --role-name "$ROLE_NAME" --region "$AWS_REGION" &>/dev/null; then
-          if terraform import aws_iam_role.lambda_execution_role "$ROLE_NAME"; then
-            echo "🟢 IAM Role importada com sucesso."
-          else
-            echo "⚠️ Falha ao importar a IAM Role."
-            exit 1
-          fi
-        else
-          echo "🛠️ IAM Role não encontrada. Terraform irá criá-la."
-        fi
-
-        echo "🔍 Verificando Log Group '$LOG_GROUP_NAME'..."
-        if aws logs describe-log-groups --log-group-name-prefix "$LOG_GROUP_NAME" --region "$AWS_REGION" | grep "$LOG_GROUP_NAME" &>/dev/null; then
-          if terraform state list | grep aws_cloudwatch_log_group.lambda_log_group >/dev/null; then
-            echo "ℹ️ Log Group já no state do Terraform."
-          else
-            if terraform import aws_cloudwatch_log_group.lambda_log_group "$LOG_GROUP_NAME"; then
-              echo "🟢 Log Group importado com sucesso."
-            else
-              echo "⚠️ Falha ao importar o Log Group."
-              exit 1
-            fi
-          fi
-        else
-          echo "🛠️ Log Group não encontrado. Terraform irá criá-lo."
-        fi
-
-        echo "🔍 Verificando Lambda '$LAMBDA_NAME'..."
-        if aws lambda get-function --function-name "$LAMBDA_NAME" --region "$AWS_REGION" &>/dev/null; then
-          if terraform import aws_lambda_function.my_lambda_function "$LAMBDA_NAME"; then
-            echo "🟢 Lambda importada com sucesso."
-          else
-            echo "⚠️ Falha ao importar a Lambda."
-            exit 1
-          fi
-        else
-          echo "🛠️ Lambda '$LAMBDA_NAME' não encontrada. Terraform irá criá-la."
-        fi
  
