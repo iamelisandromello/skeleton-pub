@@ -1,0 +1,69 @@
+name: Setup and Initialize Terraform
+description: Configura o Terraform, inicializa e seleciona o workspace com variáveis do projeto
+
+inputs:
+  terraform_version:
+    description: Versão do Terraform
+    required: false
+    default: '1.5.6'
+  environment:
+    description: Nome do ambiente (ex: dev, prod, preview)
+    required: true
+  project_name:
+    description: Nome do projeto
+    required: true
+  s3_bucket_name:
+    description: Nome do bucket S3
+    required: true
+  aws_access_key_id:
+    description: AWS Access Key ID
+    required: true
+  aws_secret_access_key:
+    description: AWS Secret Access Key
+    required: true
+
+runs:
+  using: composite
+  steps:
+      # -------------------------------
+    # 🛠️ SETUP TERRAFORM
+    # -------------------------------    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.terraform_version }}
+
+    # -------------------------------
+    # 📦 TERRAFORM INIT & WORKSPACE
+    # -------------------------------     
+    - name: Terraform Init and Workspace
+      shell: bash
+      run: |
+        terraform init
+        terraform workspace list | grep "${{ inputs.environment }}" || terraform workspace new ${{ inputs.environment }}
+        terraform workspace select ${{ inputs.environment }}
+      working-directory: terraform
+      env:
+        TF_VAR_project_name: ${{ inputs.project_name }}
+        TF_VAR_s3_bucket_name: ${{ inputs.s3_bucket_name }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+
+    # -------------------------------
+    # 📦 VALIDATE TERRAFORM INIT
+    # -------------------------------     
+    - name: Validar Terraform Init
+      shell: bash
+      run: |
+        if [ ! -d ".terraform" ]; then
+          echo "❌ Terraform init não foi concluído. Abortando."
+          exit 1
+        else
+          echo "♻️ Terraform init executado com sucesso!."
+        fi
+      working-directory: terraform
+      env:
+        TF_VAR_project_name: ${{ inputs.project_name }}
+        TF_VAR_s3_bucket_name: ${{ inputs.s3_bucket_name }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}

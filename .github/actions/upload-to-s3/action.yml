@@ -1,0 +1,42 @@
+# .github/actions/upload-to-s3/action.yml
+name: Upload Lambda ZIP to S3
+description: Extrai o bucket do JSON e faz upload do artefato da Lambda
+
+inputs:
+  global_env_vars_json:
+    description: JSON com variáveis globais (ex: S3_BUCKET_NAME)
+    required: true
+  aws_access_key_id:
+    required: true
+  aws_secret_access_key:
+    required: true
+  project_name:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Extrair nome do bucket do JSON
+      shell: bash
+      run: |
+        echo '${{ inputs.global_env_vars_json }}' > global_env_vars.json
+        BUCKET_NAME=$(jq -r '.S3_BUCKET_NAME' global_env_vars.json)
+
+        if [ -z "$BUCKET_NAME" ] || [ "$BUCKET_NAME" = "null" ]; then
+          echo "❌ Falha ao extrair o nome do bucket do JSON."
+          cat global_env_vars.json
+          exit 1
+        fi
+
+        echo "S3_BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
+        echo "ℹ️ Utilizando bucket: $BUCKET_NAME"
+
+    - name: Upload Lambda ZIP to S3
+      shell: bash
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+        AWS_REGION: us-east-1
+      run: |
+        aws s3 cp ${{ inputs.project_name }}.zip s3://$S3_BUCKET_NAME/${{ inputs.project_name }}.zip
+        echo "📦✅ Upload finalizado: $S3_BUCKET_NAME/${{ inputs.project_name }}.zip"

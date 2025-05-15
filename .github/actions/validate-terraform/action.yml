@@ -1,0 +1,22 @@
+name: Validate Terraform configuration
+description: Executa a validação do Terraform para garantir que a configuração está correta.
+
+runs:
+  using: composite
+  steps:
+    # -------------------------------
+    # 🔍 VALIDAÇÃO DO TERRAFORM
+    # Garante que a configuração está sintaticamente correta
+    # antes de prosseguir com o plano de execução.
+    # -------------------------------      
+    - name: Validar sintaxe do Terraform
+      shell: bash
+      working-directory: terraform
+      run: |
+        echo "🔍 Executando validação do Terraform..."
+        if terraform validate; then
+          echo "✅ Validação do Terraform concluída com sucesso."
+        else
+          echo "❌ Validação do Terraform falhou. Corrija os erros antes de continuar."
+          exit 1
+        fi
