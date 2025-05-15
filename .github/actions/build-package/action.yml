@@ -1,9 +1,9 @@
 name: Build and Package Lambda
-description: Instala dependências, compila o TypeScript e empacota a Lambda com node_modules
+description: "Instala dependências, compila o TypeScript e empacota a Lambda com node_modules"
 
 inputs:
   project_name:
-    description: Nome do projeto (usado para nomear o arquivo zip da Lambda)
+    description: "Nome do projeto (usado para nomear o arquivo zip da Lambda)"
     required: true
 
 runs:

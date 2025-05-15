@@ -1,15 +1,15 @@
 name: Terraform Plan and Apply
-description: Executa o Terraform plan e apply com variáveis customizadas e autenticação AWS.
+description: "Executa o Terraform plan e apply com variáveis customizadas e autenticação AWS.""
 
 inputs:
   PROJECT_NAME:
-    description: Nome do projeto para o TF_VAR
+    description: "Nome do projeto para o TF_VAR"
     required: true
   S3_BUCKET_NAME:
     description: Nome do bucket S3 compartilhado
     required: true
   ENVIRONMENT:
-    description: Ambiente de execução (ex: dev, staging, prod)
+    description: "Ambiente de execução (ex: dev, staging, prod)""
     required: true
   AWS_ACCESS_KEY_ID:
     description: Chave de acesso AWS

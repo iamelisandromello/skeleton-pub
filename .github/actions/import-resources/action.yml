@@ -1,5 +1,5 @@
 name: Import existing AWS resources
-description: Importa condicionalmente recursos AWS já existentes para o Terraform state.
+description: "Importa condicionalmente recursos AWS já existentes para o Terraform state.""
 
 inputs:
   aws_access_key_id:
@@ -15,7 +15,7 @@ inputs:
     description: Nome do projeto
     required: true
   environment:
-    description: Nome do ambiente (ex: dev, prod)
+    description: "Nome do ambiente (ex: dev, prod)""
     required: true
 
 runs:
