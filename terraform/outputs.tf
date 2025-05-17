@@ -9,7 +9,7 @@ output "lambda_arn" {
 
 output "lambda_function_name" {
   description = "Nome da função Lambda provisionada"
-  value       = module.lambda.function_name
+  value = module.lambda.lambda_function_name
 }
 
 output "bucket_name" {
