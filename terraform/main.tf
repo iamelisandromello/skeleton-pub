@@ -27,7 +27,7 @@ module "sqs" {
 
 module "lambda" {
   source                = "./modules/lambda"
-  function_name         = local.lambda_name
+  lambda_name           = local.lambda_name
   s3_bucket             = data.aws_s3_bucket.lambda_code_bucket.bucket
   s3_key                = local.lambda_package_key
   handler               = local.lambda_handler
