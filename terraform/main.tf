@@ -26,14 +26,14 @@ module "sqs" {
 }
 
 module "lambda" {
-  source             = "./modules/lambda"
-  function_name      = local.lambda_name
-  s3_bucket          = data.aws_s3_bucket.lambda_code_bucket.bucket
-  s3_key             = local.lambda_package_key
-  handler            = local.lambda_handler
-  runtime            = local.lambda_runtime
-  role_arn           = module.iam.lambda_role_arn
-  environment        = var.environment
+  source                = "./modules/lambda"
+  function_name         = local.lambda_name
+  s3_bucket             = data.aws_s3_bucket.lambda_code_bucket.bucket
+  s3_key                = local.lambda_package_key
+  handler               = local.lambda_handler
+  runtime               = local.lambda_runtime
+  role_arn              = module.iam.lambda_role_arn
+  environment_variables = local.merged_env_vars
 }
 
 module "iam" {

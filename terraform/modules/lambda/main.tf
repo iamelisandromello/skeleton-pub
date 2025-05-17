@@ -9,6 +9,6 @@ resource "aws_lambda_function" "lambda" {
   timeout       = 15
 
   environment {
-    variables = var.global_env_vars
+    variables = var.environment_variables
   }
 }
