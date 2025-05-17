@@ -38,8 +38,11 @@ module "lambda" {
 
 module "iam" {
   source = "./modules/iam"
-  project_name = var.project_name
-  environment  = var.environment
+
+  lambda_role_name     = local.lambda_role_name
+  logging_policy_name  = local.logging_policy_name
+  publish_policy_name  = local.publish_policy_name
+  sqs_queue_arn        = module.sqs.queue_arn
 }
 
 module "cloudwatch" {
