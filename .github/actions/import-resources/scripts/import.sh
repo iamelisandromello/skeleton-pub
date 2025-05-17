@@ -52,7 +52,7 @@ fi
 # ✅ Verifica existência do Bucket S3 fornecido via TF_VAR_s3_bucket_name
 echo "🔍 Verificando Bucket '$S3_BUCKET_NAME'..."
 if aws s3api head-bucket --bucket "$S3_BUCKET_NAME" --region "$AWS_REGION" 2>/dev/null; then
-  echo "🟢 Bucket S3 '$S3_BUCKET_NAME' existe. Data source será resolvido."
+  echo "🟢 Bucket S3 '$S3_BUCKET_NAME' existe. Referência como 'data.aws_s3_bucket.lambda_code_bucket'."
 else
   echo "❌ Bucket S3 '$S3_BUCKET_NAME' NÃO encontrado. Verifique se o nome está correto e acessível."
   exit 1
@@ -68,12 +68,12 @@ else
   echo "🛠️ IAM Role '$ROLE_NAME' não encontrada. Terraform irá criá-la."
 fi
 
-# ✅ Importa Log Group se existir
+# ✅ Importa Log Group se existir (corrigido para o módulo cloudwatch)
 echo "🔍 Verificando Log Group '$LOG_GROUP_NAME'..."
 if aws logs describe-log-groups --log-group-name-prefix "$LOG_GROUP_NAME" --region "$AWS_REGION" | grep "$LOG_GROUP_NAME" &>/dev/null; then
-  terraform state list | grep module.iam.aws_cloudwatch_log_group.lambda_log_group >/dev/null && \
+  terraform state list | grep module.cloudwatch.aws_cloudwatch_log_group.lambda_log_group >/dev/null && \
     echo "ℹ️ Log Group já está no state." || {
-      terraform import "module.iam.aws_cloudwatch_log_group.lambda_log_group" "$LOG_GROUP_NAME" && echo "🟢 Log Group importado com sucesso." || {
+      terraform import "module.cloudwatch.aws_cloudwatch_log_group.lambda_log_group" "$LOG_GROUP_NAME" && echo "🟢 Log Group importado com sucesso." || {
         echo "⚠️ Falha ao importar o Log Group."; exit 1;
       }
   }
