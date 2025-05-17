@@ -29,12 +29,12 @@ module "lambda" {
   source                = "./modules/lambda"
   lambda_name           = local.lambda_name
   s3_bucket             = data.aws_s3_bucket.lambda_code_bucket.bucket
-  s3_key                = local.lambda_package_key
+  s3_key                = local.s3_object_key                     # corrigido
   handler               = local.lambda_handler
   runtime               = local.lambda_runtime
-  role_arn              = module.iam.lambda_role_arn
+  role_arn              = module.iam.role_arn                    # corrigido
   environment_variables = local.merged_env_vars
-} 
+}
 
 module "iam" {
   source = "./modules/iam"
