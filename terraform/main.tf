@@ -14,14 +14,13 @@ module "iam" {
   lambda_role_name      = local.lambda_role_name
   logging_policy_name   = local.logging_policy_name
   publish_policy_name   = local.publish_policy_name
-  log_group_name        = local.log_group_name
   sqs_queue_arn         = module.sqs.queue_arn
 }
 
 module "cloudwatch" {
-  source = "./modules/cloudwatch"
+  source          = "./modules/cloudwatch"
 
-  log_group_name = local.log_group_name
+  log_group_name  = local.log_group_name
 }
 
 module "sqs" {
