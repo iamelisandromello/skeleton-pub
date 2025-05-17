@@ -34,7 +34,7 @@ module "lambda" {
   runtime               = local.lambda_runtime
   role_arn              = module.iam.lambda_role_arn
   environment_variables = local.merged_env_vars
-}
+} 
 
 module "iam" {
   source = "./modules/iam"
