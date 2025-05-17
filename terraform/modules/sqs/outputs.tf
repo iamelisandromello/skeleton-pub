@@ -1,4 +1,11 @@
-// modules/sqs/outputs.tf
+#########################################
+# modules/sqs/outputs.tf
+#########################################
+
+output "queue_url" {
+  value = aws_sqs_queue.queue.id
+}
+
 output "queue_arn" {
   value = aws_sqs_queue.queue.arn
 }
