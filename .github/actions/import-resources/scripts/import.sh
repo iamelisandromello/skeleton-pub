@@ -84,7 +84,7 @@ fi
 # ✅ Importa Lambda Function se existir
 echo "🔍 Verificando Lambda '$LAMBDA_NAME'..."
 if aws lambda get-function --function-name "$LAMBDA_NAME" --region "$AWS_REGION" &>/dev/null; then
-  terraform import "module.lambda.aws_lambda_function.my_lambda_function" "$LAMBDA_NAME" && echo "🟢 Lambda importada com sucesso." || {
+  terraform import "module.lambda.aws_lambda_function.lambda" "$LAMBDA_NAME" && echo "🟢 Lambda importada com sucesso." || {
     echo "⚠️ Falha ao importar a Lambda."; exit 1;
   }
 else
