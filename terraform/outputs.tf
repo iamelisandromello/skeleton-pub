@@ -1,26 +1,28 @@
+#########################################
+# outputs.tf (root module)
+#########################################
+
 output "lambda_arn" {
-  value = aws_lambda_function.my_lambda_function.arn
-}
-
-output "bucket_name" {
-  value = data.aws_s3_bucket.lambda_code_bucket.bucket
-}
-
-output "s3_bucket_name" {
-  value = var.s3_bucket_name
+  description = "ARN da função Lambda provisionada"
+  value       = module.lambda.lambda_arn
 }
 
 output "lambda_function_name" {
-  value = aws_lambda_function.my_lambda_function.function_name
+  description = "Nome da função Lambda provisionada"
+  value       = module.lambda.function_name
 }
 
-# ===============================
-# Outputs adicionais para a Fila SQS
-# ===============================
+output "bucket_name" {
+  description = "Nome do bucket S3 onde está o código da Lambda"
+  value       = data.aws_s3_bucket.lambda_code_bucket.bucket
+}
+
 output "sqs_queue_url" {
-  value = aws_sqs_queue.my_queue.url
+  description = "URL da fila SQS associada à Lambda"
+  value       = module.sqs.queue_url
 }
 
 output "sqs_queue_arn" {
-  value = aws_sqs_queue.my_queue.arn
+  description = "ARN da fila SQS associada à Lambda"
+  value       = module.sqs.queue_arn
 }
