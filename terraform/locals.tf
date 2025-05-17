@@ -13,4 +13,14 @@ locals {
 
   s3_bucket_name       = var.s3_bucket_name
   s3_object_key        = "${var.project_name}.zip"
+
+  locals {
+    merged_env_vars = merge(
+      var.global_env_vars,
+      var.environments[var.environment]
+    )
+  }
+
+  lambda_handler  = "main/app.handler"
+  lambda_runtime  = "nodejs20.x"
 }
