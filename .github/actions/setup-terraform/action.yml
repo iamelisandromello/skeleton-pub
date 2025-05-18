@@ -41,13 +41,8 @@ runs:
       run: |
         terraform init
   
-        ENVIRONMENT="preview"
-        if [[ "${{ github.base_ref }}" == "main" || "${GITHUB_REF##*/}" == "main" ]]; then
-          ENVIRONMENT="prod"
-        elif [[ "${{ github.base_ref }}" == "develop" || "${GITHUB_REF##*/}" == "develop" ]]; then
-          ENVIRONMENT="dev"
-        fi
-
+        terraform workspace list | grep "${{ inputs.environment }}" || terraform workspace new ${{ inputs.environment }}
+        terraform workspace select ${{ inputs.environment }}
         terraform workspace show
 
       working-directory: terraform
