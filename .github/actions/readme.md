@@ -120,6 +120,8 @@ Executa o `terraform plan` e `terraform apply` com variáveis específicas para 
 ├── generate-tfvars/
 │ └── action.yml
 ├── import-resources/
+│ └── scripts
+│   └── import.sh
 │ └── action.yml
 ├── validate-terraform/
 │ └── action.yml
