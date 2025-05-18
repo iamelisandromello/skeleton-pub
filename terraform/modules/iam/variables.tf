@@ -1,4 +1,7 @@
-// modules/iam/variables.tf
+#########################################
+# variables.tf (iam module)
+#########################################
+
 variable "lambda_role_name" {
   description = "Nome da IAM Role de execução da Lambda"
   type        = string

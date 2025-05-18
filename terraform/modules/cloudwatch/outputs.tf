@@ -1,5 +1,5 @@
 #########################################
-# modules/cloudwatch/outputs.tf
+# outputs.tf (cloudwatch module)
 #########################################
 
 output "log_group_name" {

@@ -1,5 +1,5 @@
 #########################################
-# modules/cloudwatch/main.tf
+# main.tf (cloudwatch module)
 #########################################
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {

@@ -40,7 +40,6 @@ runs:
           echo "✅ Nenhuma alteração de formatação detectada."
         fi
 
-
     - name: Terraform Plan
       shell: bash
       working-directory: terraform

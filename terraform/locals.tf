@@ -1,3 +1,7 @@
+#########################################
+# locals.tf (root module)
+#########################################
+
 locals {
   # Identificadores padronizados
   environment_suffix   = var.environment == "prod" ? "" : "-${var.environment}"
