@@ -21,10 +21,25 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Format Check
+    - name: Auto format Terraform and commit changes
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
       shell: bash
       working-directory: terraform
-      run: terraform fmt -check -recursive
+      run: |
+        echo "🧹 Corrigindo formatação com terraform fmt..."
+        terraform fmt -recursive
+
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "🚨 Alterações de formatação detectadas. Realizando commit..."
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "chore(terraform): auto fmt"
+          git push
+        else
+          echo "✅ Nenhuma alteração de formatação detectada."
+        fi
+
 
     - name: Terraform Plan
       shell: bash
