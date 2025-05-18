@@ -40,8 +40,14 @@ runs:
       shell: bash
       run: |
         terraform init
-        terraform workspace list | grep "${{ inputs.environment }}" || terraform workspace new ${{ inputs.environment }}
-        terraform workspace select ${{ inputs.environment }}
+
+        if terraform workspace list | grep -q "${{ inputs.environment }}"; then
+          terraform workspace select ${{ inputs.environment }}
+        else
+          terraform workspace new ${{ inputs.environment }}
+        fi
+
+        terraform workspace show
       working-directory: terraform
       env:
         TF_VAR_project_name: ${{ inputs.project_name }}
