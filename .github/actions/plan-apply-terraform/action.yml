@@ -33,6 +33,11 @@ runs:
         echo "📦 Executando Terraform Plan..."
         terraform plan -input=false -var "environment=${{ inputs.ENVIRONMENT }}"
 
+    - name: Format Check
+      shell: bash
+      working-directory: terraform
+      run: terraform fmt -check -recursive
+
     - name: Terraform Apply
       shell: bash
       working-directory: terraform

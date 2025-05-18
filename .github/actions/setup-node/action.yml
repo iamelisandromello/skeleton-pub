@@ -13,19 +13,18 @@ runs:
     - name: Setup Node.js ${{ inputs.node_version }}
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ inputs.node_version }}
+        node-version: ${{ inputs.node_version }}  
 
     - name: Setup Environment Variables
       shell: bash
       run: |
         echo "PROJECT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
-        if [[ "${{ github.base_ref }}" == "main" ]]; then
-          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-        elif [[ "${{ github.base_ref }}" == "develop" ]]; then
-          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-        else
-          echo "ENVIRONMENT=preview" >> $GITHUB_ENV
+        ENVIRONMENT="preview"
+
+        if [[ "${{ github.base_ref }}" == "main" || "${GITHUB_REF##*/}" == "main" ]]; then
+          ENVIRONMENT="prod"
+        elif [[ "${{ github.base_ref }}" == "develop" || "${GITHUB_REF##*/}" == "develop" ]]; then
+          ENVIRONMENT="dev"
         fi
 
-        echo "📦 Ambiente configurado: PROJECT_NAME=${GITHUB_REPOSITORY#*/}, ENVIRONMENT=$ENVIRONMENT"
