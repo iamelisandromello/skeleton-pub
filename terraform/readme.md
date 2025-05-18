@@ -1,8 +1,28 @@
+# 🚀 Terraform AWS Serverless Infrastructure
+
+Este projeto provê a infraestrutura automatizada para uma arquitetura **serverless** na AWS utilizando **Terraform**, com suporte completo a **pipelines CI/CD** e **ambientes isolados** por projeto (ex: `dev`, `prod`, `preview`).
+
+---
+
+## 📦 Recursos Provisionados
+
+- 🧠 AWS Lambda
+- 🔁 Amazon SQS
+- 🔐 IAM Roles & Policies
+- 📊 CloudWatch Logs
+- 📁 Bucket S3 (referência compartilhada)
+
+---
+
+## 📁 Estrutura de Diretórios
+
+```bash
 terraform/
 ├── main.tf
 ├── variables.tf
 ├── outputs.tf
 ├── locals.tf
+├── readme.md
 └── modules/
     ├── lambda/
     │   ├── main.tf
@@ -20,139 +40,69 @@ terraform/
         ├── main.tf
         ├── variables.tf
         └── outputs.tf
-
-🔸 modules/iam/
-Crie:
-
-aws_iam_role.lambda_execution_role
-
-aws_iam_role_policy.lambda_logging_policy
-
-aws_iam_role_policy.lambda_sqs_publish_policy
+```
 
 
-  # =======================================
-  # 🌍 AWS PROVIDER CONFIGURATION
-  # =======================================
-  provider "aws" {
-    region = var.region
-  }
+---
 
-  # =======================================
-  # ☁️ S3 BUCKET (IMPORTADO, NÃO CRIAR)
-  # =======================================
-  # Usado para armazenar o artefato zip da função Lambda.
-  # Sempre reutilizado/importado. Não deve ser gerenciado pela criação.
-  data "aws_s3_bucket" "lambda_code_bucket" {
-    bucket = local.s3_bucket_name
-  }
+## 🛠️ Como Usar
 
-  # =======================================
-  # 🔐 IAM ROLE E POLÍTICAS PARA LAMBDA
-  # =======================================
-  # Role básica de execução da Lambda
-  # Também deve ser importada caso exista.
-  resource "aws_iam_role" "lambda_execution_role" {
-    name = local.lambda_role_name
+### 1. Configuração Inicial
 
-    assume_role_policy = jsonencode({
-      Version = "2012-10-17",
-      Statement = [
-        {
-          Effect = "Allow",
-          Principal = {
-            Service = "lambda.amazonaws.com"
-          },
-          Action = "sts:AssumeRole"
-        }
-      ]
-    })
-    
-    lifecycle {
-      prevent_destroy = true
-      create_before_destroy = false
-      ignore_changes = [assume_role_policy] # ← evita pequenos conflitos na política
-    }
-  }
+Defina os valores no seu `.tfvars` (ou via pipeline):
 
-  # Política de logs para CloudWatch
-  resource "aws_iam_role_policy" "lambda_logging_policy" {
-    name = local.logging_policy_name
-    role = aws_iam_role.lambda_execution_role.id
+```hcl
+project_name     = "skeleton"
+environment      = "dev"
+aws_region       = "us-east-1"
+s3_bucket_name   = "bucket-compartilhado"
+environments     = { dev = { KEY = "VALUE" } }
+global_env_vars  = { STAGE = "dev" }
+```
 
-    policy = jsonencode({
-      Version = "2012-10-17",
-      Statement = [
-        {
-          Effect = "Allow",
-          Action = [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ],
-          Resource = "arn:aws:logs:${var.region}:*:log-group:${local.log_group_name}:*"
-        }
-      ]
-    })
-  }
+## 🔄 Recursos Dinâmicos
 
-  # =======================================
-  # 📊 CLOUDWATCH LOG GROUP
-  # =======================================
-  resource "aws_cloudwatch_log_group" "lambda_log_group" {
-    name              = local.log_group_name
-    retention_in_days = 14
+- Recursos são nomeados automaticamente com base em project_name e environment.
 
-    lifecycle {
-      prevent_destroy = true
-      create_before_destroy = false
-    }
-  }
+- Variáveis de ambiente são mescladas entre globais e específicas por ambiente.
 
-  # =======================================
-  # 🧠 FUNÇÃO LAMBDA
-  # =======================================
-  # Deve ser atualizada caso exista — nunca duplicada.
-  resource "aws_lambda_function" "my_lambda_function" {
-    function_name = local.lambda_name 
-    role          = aws_iam_role.lambda_execution_role.arn
-    handler       = "main/app.handler"
-    runtime       = "nodejs20.x"
-    s3_bucket     = data.aws_s3_bucket.lambda_code_bucket.bucket
-    s3_key        = local.s3_object_key
-    timeout       = 15
+- Suporte à importação condicional para integração com pipelines.
 
-    environment {
-      variables = var.global_env_vars
-    }
+## 📤 CI/CD Sugerido
+- Este projeto foi pensado para funcionar com pipelines GitHub Actions ou similares, com etapas para:
 
-    depends_on = [aws_iam_role_policy.lambda_logging_policy]
-  }
+- Empacotar código Lambda
 
-  # =======================================
-  # 📬 SQS QUEUE + PERMISSÕES
-  # =======================================
+- Fazer upload no S3
 
-  # Fila SQS associada à aplicação
-  resource "aws_sqs_queue" "my_queue" {
-    name = local.queue_name
-  }
+- Gerar arquivo .tfvars dinâmico
 
-  # Política que permite à Lambda enviar mensagens para a fila SQS
-  resource "aws_iam_role_policy" "lambda_sqs_publish_policy" {
-    name = local.publish_policy_name
-    role = aws_iam_role.lambda_execution_role.id
+- Executar terraform plan e apply
 
-    policy = jsonencode({
-      Version = "2012-10-17",
-      Statement = [
-        {
-          Effect = "Allow",
-          Action = [
-            "sqs:SendMessage"
-          ],
-          Resource = aws_sqs_queue.my_queue.arn
-        }
-      ]
-    })
-  }
+## 📊 Observabilidade
+
+- Os logs da Lambda são enviados para o CloudWatch Logs.
+
+- Retenção de logs configurada para 14 dias.
+
+- IAM Role da Lambda com permissões mínimas necessárias para log e envio à SQS.
+
+## 👷 Sustentação
+
+- Utilize terraform plan antes de aplicar mudanças.
+
+- Atualize artefatos no S3 com versionamento.
+
+- Mantenha as roles IAM revisadas.
+
+- Adicione alarmes ao CloudWatch, se necessário.
+
+## 📚 Documentação por Módulo
+
+- modules/cloudwatch
+
+- modules/iam
+
+- modules/lambda
+
+- modules/sqs

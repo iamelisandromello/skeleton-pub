@@ -22,8 +22,68 @@ Empacota uma função Lambda em Node.js:
 ### 2. [`setup-node`](./setup-node)
 Configura o ambiente Node.js (via `actions/setup-node`) com cache automático.
 
+<<<<<<< Updated upstream:.github/actions/readme.md
 **Inputs:**
 - `NODE_VERSION` – Versão do Node.js (ex: `18.x`) ✅ **obrigatório**
+=======
+```
+.
+├── .github
+    ├── readme.md
+    ├── workflows/
+    │  └─pipeline.yml
+    └── actions/
+       ├── setup-node
+       │   └── action.yml
+       ├── build-package
+       │   └── action.yml
+       ├── upload-to-s3
+       │   └── action.yml
+       ├── setup-terraform
+       │   └── action.yml
+       ├── generate-tfvars
+       │   └── action.yml
+       ├── import-resources
+       │   ├── scripts/
+       │   │  └── import.sh
+       │   └── action.yml
+       ├── validate-terraform
+       │   └── action.yml
+       └── plan-apply-terraform
+           └─ action.yml
+├── terraform/
+    ├── main.tf
+    ├── variables.tf
+    ├── outputs.tf
+    ├── locals.tf
+    ├── readme.md
+    └── modules/
+        ├── lambda/
+        │  ├── readme-lambda.md
+        │  ├── main.tf
+        │  ├── variables.tf
+        │  └── outputs.tf
+        └── iam/
+        │   ├── readme-iam.md
+        │   ├── main.tf
+        │   ├── variables.tf
+        │   └── outputs.tf
+        └── cloudwatch/
+        │   ├── readme-cloudwatch.md
+        │   ├── main.tf
+        │   ├── variables.tf
+        │   └── outputs.tf
+        └── sqs/
+            ├── readme-sqs.md
+            ├── main.tf
+            ├── variables.tf
+            └── outputs.tf
+└── src/
+    └── main
+      └── app.ts
+        └── handler
+```
+>>>>>>> Stashed changes:.github/readme.md
 
 ---
 
