@@ -1,4 +1,7 @@
-// modules/iam/main.tf
+#########################################
+# main.tf (iam module)
+#########################################
+
 resource "aws_iam_role" "lambda_execution_role" {
   name = var.lambda_role_name
   assume_role_policy = jsonencode({

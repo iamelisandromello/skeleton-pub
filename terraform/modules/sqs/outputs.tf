@@ -1,5 +1,5 @@
 #########################################
-# modules/sqs/outputs.tf
+# outputs.tf (sqs module)
 #########################################
 
 output "queue_url" {

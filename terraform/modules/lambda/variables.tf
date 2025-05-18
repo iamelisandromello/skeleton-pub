@@ -1,4 +1,7 @@
-// modules/lambda/variables.tf
+#########################################
+# variables.tf (lambda module)
+#########################################
+
 variable "lambda_name" { type = string }
 variable "role_arn"     { type = string }
 variable "s3_bucket"    { type = string }

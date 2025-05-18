@@ -1,5 +1,5 @@
 #########################################
-# modules/cloudwatch/variables.tf
+# variables.tf (cloudwatch module)
 #########################################
 
 variable "log_group_name" {

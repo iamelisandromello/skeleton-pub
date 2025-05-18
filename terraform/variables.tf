@@ -1,3 +1,7 @@
+#########################################
+# variables.tf (root module)
+#########################################
+
 variable "aws_region" {
   description = "Região AWS onde os recursos serão provisionados"
   type        = string
